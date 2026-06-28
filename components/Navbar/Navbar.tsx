@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Phone, Menu, X, ArrowUpRight, Stethoscope, Sparkles } from "lucide-react";
 
 export default function Navbar() {
@@ -24,33 +24,26 @@ export default function Navbar() {
     { name: "Contact", link: "/#contact" },
   ];
 
-  // Mobile menu variants
-  const mobileMenuVariants = {
+  // Mobile menu variants with proper typing
+  const mobileMenuVariants: Variants = {
     hidden: { 
       opacity: 0,
-      height: 0,
-      transition: {
-        duration: 0.3,
-        when: "afterChildren"
-      }
+      height: 0
     },
     visible: { 
       opacity: 1,
-      height: "auto",
-      transition: {
-        duration: 0.4,
-        when: "beforeChildren",
-        staggerChildren: 0.05
-      }
+      height: "auto"
     }
   };
 
-  const mobileItemVariants = {
-    hidden: { x: -20, opacity: 0 },
+  const mobileItemVariants: Variants = {
+    hidden: { 
+      x: -20, 
+      opacity: 0 
+    },
     visible: { 
       x: 0, 
-      opacity: 1,
-      transition: { type: "spring", stiffness: 300, damping: 24 }
+      opacity: 1 
     }
   };
 
@@ -58,7 +51,7 @@ export default function Navbar() {
     <motion.header
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
+      transition={{ duration: 0.6 }}
       className="fixed top-0 left-0 w-full z-[999]"
     >
       <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -183,6 +176,10 @@ export default function Navbar() {
             initial="hidden"
             animate="visible"
             exit="hidden"
+            transition={{
+              duration: 0.3,
+              ease: "easeInOut"
+            }}
             className="lg:hidden px-4 sm:px-6 mt-3"
           >
             <div className="relative overflow-hidden rounded-2xl bg-white/95 backdrop-blur-xl border border-gray-100 shadow-2xl">
@@ -192,13 +189,29 @@ export default function Navbar() {
 
               <div className="relative z-10 p-6">
                 {/* Mobile Navigation Links with Stagger */}
-                <div className="flex flex-col gap-2">
+                <motion.div 
+                  className="flex flex-col gap-2"
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: {
+                      opacity: 1,
+                      transition: {
+                        staggerChildren: 0.05,
+                        delayChildren: 0.1
+                      }
+                    }
+                  }}
+                >
                   {navLinks.map((item, idx) => (
                     <motion.a
                       key={idx}
                       href={item.link}
                       onClick={() => setMobileMenu(false)}
                       variants={mobileItemVariants}
+                      transition={{ duration: 0.3 }}
                       className="group flex items-center justify-between py-3.5 px-3 rounded-xl text-base font-semibold text-slate-700 hover:text-cyan-600 hover:bg-gradient-to-r hover:from-cyan-50 hover:to-blue-50 transition-all duration-300"
                       whileHover={{ x: 8 }}
                     >
@@ -209,12 +222,14 @@ export default function Navbar() {
                       />
                     </motion.a>
                   ))}
-                </div>
+                </motion.div>
 
                 {/* Mobile Call Button */}
                 <motion.a
                   href="tel:+917777802365"
-                  variants={mobileItemVariants}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.3 }}
                   className="relative z-10 mt-6 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 px-5 py-3.5 text-white font-semibold shadow-lg shadow-cyan-500/20 overflow-hidden group"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -226,7 +241,9 @@ export default function Navbar() {
 
                 {/* Premium Trust Badge */}
                 <motion.div
-                  variants={mobileItemVariants}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4, duration: 0.3 }}
                   className="mt-6 pt-4 border-t border-gray-100 text-center"
                 >
                   <div className="flex items-center justify-center gap-2">

@@ -1,147 +1,153 @@
 "use client";
 
-import { motion } from "framer-motion";
-
-import {
-  Award,
-  GraduationCap,
-  Microscope,
-  BadgeCheck,
-} from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import { Autoplay } from "swiper/modules";
+import { Autoplay, Navigation } from "swiper/modules";
+
+import Link from "next/link";
 
 import "swiper/css";
-
-const awards = [
-  {
-    title: "ENT Excellence Award",
-    desc: "Recognized for advanced ENT treatments and patient care.",
-    icon: Award,
-  },
-  {
-    title: "Research Publications",
-    desc: "Published multiple academic papers and ENT research work.",
-    icon: Microscope,
-  },
-  {
-    title: "Medical Workshops",
-    desc: "Participated in advanced surgical and ENT workshops.",
-    icon: GraduationCap,
-  },
-  {
-    title: "Certified Specialist",
-    desc: "Professional ENT expertise with modern treatment methods.",
-    icon: BadgeCheck,
-  },
-  {
-    title: "Advanced Surgical Training",
-    desc: "Specialized training in modern ENT surgical procedures.",
-    icon: Award,
-  },
-];
+import "swiper/css/navigation";
 
 export default function Awards() {
+  const [awards, setAwards] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/awards")
+      .then((res) => res.json())
+      .then((data) => setAwards(data));
+  }, []);
+
   return (
-    <section className="relative py-32 overflow-hidden bg-gradient-to-b from-white to-[#f7fbff]">
+    <section className="py-28 bg-gradient-to-b from-white to-blue-50">
 
-      {/* BACKGROUND */}
-      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-200/20 rounded-full blur-3xl"></div>
+      <div className="max-w-7xl mx-auto px-6">
 
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-cyan-200/20 rounded-full blur-3xl"></div>
+        <div className="text-center mb-16">
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
+          <span className="text-blue-600 font-bold uppercase tracking-widest">
+            Recognition
+          </span>
 
-        {/* HEADING */}
-        <motion.div
-          initial={{ opacity: 0, y: 80 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          viewport={{ once: true }}
-          className="text-center max-w-4xl mx-auto"
-        >
-
-          <div className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-blue-100 text-blue-700 font-semibold mb-8">
-
-            <Award size={18} />
-
+          <h2 className="text-5xl font-black mt-4 text-gray-900">
             Awards & Achievements
-          </div>
-
-          <h2 className="text-5xl lg:text-6xl font-black leading-tight text-gray-900">
-
-            Excellence in
-            <span className="block bg-gradient-to-r from-blue-700 to-cyan-500 bg-clip-text text-transparent">
-              ENT Healthcare
-            </span>
           </h2>
 
-          <p className="mt-8 text-lg leading-8 text-gray-600">
-            Recognized for professional expertise,
-            advanced treatments, research work,
-            and exceptional patient care.
+          <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
+            Professional milestones, certifications and achievements
+            earned through dedication and excellence in ENT care.
           </p>
-        </motion.div>
 
-        {/* SLIDER */}
-        <div className="mt-24">
+        </div>
 
-          <Swiper
-            slidesPerView={1}
-            spaceBetween={30}
-            loop={true}
-            autoplay={{
-              delay: 2500,
-              disableOnInteraction: false,
-            }}
-            breakpoints={{
-              768: {
-                slidesPerView: 2,
-              },
-              1200: {
-                slidesPerView: 3,
-              },
-            }}
-            modules={[Autoplay]}
-          >
+        <Swiper
+          modules={[Autoplay, Navigation]}
+          navigation
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
+          }}
+          spaceBetween={30}
+          slidesPerView={1}
+          breakpoints={{
+            768: {
+              slidesPerView: 2,
+            },
+            1024: {
+              slidesPerView: 3,
+            },
+          }}
+        >
+         {awards.map((award: any) => (
+  <SwiperSlide key={award._id}>
+    
+    <Link href={`/awards/${award.slug}`}>
+      
+      <div className="group h-full bg-white rounded-[32px] border border-blue-100 overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 cursor-pointer">
 
-            {awards.map((item, index) => (
-              <SwiperSlide key={index}>
+        {/* IMAGE */}
+        <div className="relative h-56 overflow-hidden">
+          <img
+            src={award.image || "/Images/default-award.jpg"}
+            alt={award.title}
+            className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700"
+          />
 
-                <div className="group relative overflow-hidden bg-white/80 backdrop-blur-2xl border border-white shadow-[0_20px_80px_rgba(0,0,0,0.08)] rounded-[36px] p-10 hover:-translate-y-4 transition-all duration-500 min-h-[360px]">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
 
-                  {/* GLOW */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-cyan-500/0 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+          <div className="absolute top-4 right-4 w-12 h-12 rounded-xl bg-white/20 backdrop-blur-xl flex items-center justify-center text-2xl">
+            🏆
+          </div>
 
-                  {/* ICON */}
-                  <div className="relative z-10 w-20 h-20 rounded-3xl bg-gradient-to-r from-blue-700 to-cyan-500 flex items-center justify-center text-white shadow-2xl shadow-blue-500/30">
+          <div className="absolute bottom-4 left-4">
+            <span className="px-4 py-2 rounded-full bg-white/20 backdrop-blur-xl text-white font-bold text-sm">
+              {award.year}
+            </span>
+          </div>
+        </div>
 
-                    <item.icon size={34} />
-                  </div>
+        {/* CONTENT */}
+        <div className="p-8">
 
-                  {/* CONTENT */}
-                  <div className="relative z-10">
+          <h3 className="text-2xl font-black text-gray-900 line-clamp-2">
+            {award.title}
+          </h3>
 
-                    <h3 className="mt-10 text-3xl font-black text-gray-900">
-                      {item.title}
-                    </h3>
+          <p className="text-gray-600 mt-4 leading-7 line-clamp-3">
+            {award.description}
+          </p>
 
-                    <p className="mt-6 text-gray-600 leading-8 text-lg">
-                      {item.desc}
-                    </p>
-                  </div>
+          <div className="flex items-center gap-2 mt-6 text-cyan-600 font-bold">
+            View Details →
+          </div>
 
-                </div>
-
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          <div className="mt-6 h-1 w-0 bg-gradient-to-r from-blue-600 to-cyan-500 group-hover:w-full transition-all duration-500"></div>
 
         </div>
 
       </div>
+
+    </Link>
+
+            </SwiperSlide>
+          ))}
+        </Swiper>
+
+        <div className="flex justify-center mt-14">
+  <Link
+    href="/awards"
+    className="
+      group
+      inline-flex
+      items-center
+      gap-3
+      px-8
+      py-4
+      rounded-2xl
+      bg-gradient-to-r
+      from-cyan-600
+      to-blue-600
+      text-white
+      font-bold
+      shadow-xl
+      hover:shadow-cyan-300/40
+      hover:scale-105
+      transition-all
+      duration-300
+    "
+  >
+    View All Awards
+
+    <span className="group-hover:translate-x-1 transition-all">
+      →
+    </span>
+  </Link>
+</div>
+
+      </div>
+
     </section>
   );
 }

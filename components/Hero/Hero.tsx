@@ -41,7 +41,7 @@ export default function Hero() {
         >
 
           <source
-            src="/videos/doctor1.mp4"
+            src="/videos/doctorV.mp4"
             type="video/mp4"
           />
 
