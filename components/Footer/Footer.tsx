@@ -31,67 +31,63 @@ export default function Footer() {
         </div>
       </a>
 
-      <footer className="relative overflow-hidden bg-gradient-to-b from-slate-900 to-slate-950 pt-20 pb-8">
+      <footer className="relative overflow-hidden bg-white border-t border-teal-100 pt-16 pb-6">
         
-        {/* Premium Background Effects */}
-        <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-cyan-500/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl"></div>
+        {/* Premium Background Effects - Soft Teal */}
+        <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-teal-50/50 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-cyan-50/50 rounded-full blur-3xl"></div>
         
         {/* Subtle Grid Pattern */}
-        <div className="absolute inset-0 opacity-10" style={{
-          backgroundImage: 'radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 1px)',
+        <div className="absolute inset-0 opacity-30" style={{
+          backgroundImage: 'radial-gradient(circle at 1px 1px, #ccfbf1 1px, transparent 1px)',
           backgroundSize: '40px 40px'
         }}></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           
-          {/* Main Footer Grid - Reduced spacing */}
+          {/* Main Footer Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             
             {/* Brand Section */}
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
-                  <Stethoscope size={20} className="text-white" />
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 flex items-center justify-center shadow-lg shadow-teal-500/20">
+                  <Stethoscope size={22} className="text-white" />
                 </div>
-                <h3 className="text-2xl font-black text-white">
-                  Dr. Anupriya
-                </h3>
+                <div>
+                  <h3 className="text-2xl font-black text-gray-900">
+                    Dr. Anupriya
+                  </h3>
+                  <p className="text-teal-600 text-xs font-semibold tracking-wide">
+                    ENT Specialist
+                  </p>
+                </div>
               </div>
-              <p className="text-cyan-400 text-sm font-semibold tracking-wide">
-                ENT Specialist
-              </p>
-              <p className="mt-4 text-gray-400 text-sm leading-relaxed">
+              <p className="mt-3 text-gray-600 text-sm leading-relaxed">
                 Providing advanced ENT care with modern diagnosis,
                 compassionate treatment, and patient-centered healthcare in Bhopal.
               </p>
               {/* Trust Badge */}
-              <div className="flex items-center gap-2 mt-5">
-                <Shield size={14} className="text-cyan-500" />
+              <div className="flex items-center gap-2 mt-4">
+                <Shield size={14} className="text-teal-600" />
                 <span className="text-xs text-gray-500">NABH Accredited Hospital</span>
               </div>
             </div>
 
             {/* Quick Links */}
             <div>
-              <h3 className="text-xl font-black text-white mb-6 flex items-center gap-2">
-                <Sparkles size={16} className="text-cyan-500" />
+              <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-2">
+                <Sparkles size={16} className="text-teal-600" />
                 Quick Links
               </h3>
               <div className="space-y-3">
-                {[
-                  "Home",
-                  "About",
-                  "Services",
-                  "Gallery",
-                  "Contact",
-                ].map((item, index) => (
+                {["Home", "About", "Services", "Gallery", "Contact"].map((item, index) => (
                   <a
                     key={index}
                     href={`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`}
-                    className="group flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm"
+                    className="group flex items-center gap-2 text-gray-600 hover:text-teal-600 transition-all duration-300 text-sm"
                   >
-                    <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+                    <ChevronRight size={14} className="text-teal-400 group-hover:translate-x-1 transition-transform duration-300" />
                     {item}
                   </a>
                 ))}
@@ -100,8 +96,8 @@ export default function Footer() {
 
             {/* Treatments */}
             <div>
-              <h3 className="text-xl font-black text-white mb-6 flex items-center gap-2">
-                <Sparkles size={16} className="text-cyan-500" />
+              <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-2">
+                <Sparkles size={16} className="text-teal-600" />
                 Treatments
               </h3>
               <div className="space-y-3">
@@ -114,9 +110,9 @@ export default function Footer() {
                 ].map((item, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-all duration-300 text-sm cursor-pointer group"
+                    className="flex items-center gap-2 text-gray-600 hover:text-teal-600 transition-all duration-300 text-sm cursor-pointer group"
                   >
-                    <div className="w-1 h-1 rounded-full bg-cyan-500 group-hover:w-2 transition-all duration-300"></div>
+                    <div className="w-1.5 h-1.5 rounded-full bg-teal-400 group-hover:w-2 transition-all duration-300"></div>
                     {item}
                   </div>
                 ))}
@@ -125,19 +121,19 @@ export default function Footer() {
 
             {/* Contact Info */}
             <div>
-              <h3 className="text-xl font-black text-white mb-6 flex items-center gap-2">
-                <Sparkles size={16} className="text-cyan-500" />
+              <h3 className="text-lg font-black text-gray-900 mb-6 flex items-center gap-2">
+                <Sparkles size={16} className="text-teal-600" />
                 Contact Info
               </h3>
-              <div className="space-y-5">
+              <div className="space-y-4">
                 {/* Phone */}
                 <div className="flex gap-3 group">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 flex items-center justify-center text-white shadow-md shadow-teal-500/20 group-hover:scale-110 transition-transform duration-300">
                     <Phone size={16} />
                   </div>
                   <div>
-                    <p className="text-gray-500 text-xs">Call for Appointment</p>
-                    <a href="tel:+917777802365" className="text-white font-semibold text-sm hover:text-cyan-400 transition-colors">
+                    <p className="text-gray-400 text-xs">Call for Appointment</p>
+                    <a href="tel:+917777802365" className="text-gray-900 font-semibold text-sm hover:text-teal-600 transition-colors">
                       +91 77778 02365
                     </a>
                   </div>
@@ -145,12 +141,12 @@ export default function Footer() {
                 
                 {/* Emergency */}
                 <div className="flex gap-3 group">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-red-500 to-rose-600 flex items-center justify-center text-white shadow-md shadow-red-500/20 group-hover:scale-110 transition-transform duration-300">
                     <Phone size={16} />
                   </div>
                   <div>
-                    <p className="text-gray-500 text-xs">24/7 Emergency</p>
-                    <a href="tel:+917552773393" className="text-white font-semibold text-sm hover:text-red-400 transition-colors">
+                    <p className="text-gray-400 text-xs">24/7 Emergency</p>
+                    <a href="tel:+917552773393" className="text-gray-900 font-semibold text-sm hover:text-red-500 transition-colors">
                       +91 75527 73393
                     </a>
                   </div>
@@ -158,12 +154,12 @@ export default function Footer() {
                 
                 {/* Email */}
                 <div className="flex gap-3 group">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 flex items-center justify-center text-white shadow-md shadow-teal-500/20 group-hover:scale-110 transition-transform duration-300">
                     <Mail size={16} />
                   </div>
                   <div>
-                    <p className="text-gray-500 text-xs">Email Address</p>
-                    <a href="mailto:clinic@hajelahospital.com" className="text-white font-semibold text-sm hover:text-cyan-400 transition-colors">
+                    <p className="text-gray-400 text-xs">Email Address</p>
+                    <a href="mailto:clinic@hajelahospital.com" className="text-gray-900 font-semibold text-sm hover:text-teal-600 transition-colors">
                       clinic@hajelahospital.com
                     </a>
                   </div>
@@ -171,12 +167,12 @@ export default function Footer() {
                 
                 {/* Address */}
                 <div className="flex gap-3 group">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 flex items-center justify-center text-white shadow-md shadow-teal-500/20 group-hover:scale-110 transition-transform duration-300">
                     <MapPin size={16} />
                   </div>
                   <div>
-                    <p className="text-gray-500 text-xs">Clinic Address</p>
-                    <p className="text-white text-sm leading-relaxed">
+                    <p className="text-gray-400 text-xs">Clinic Address</p>
+                    <p className="text-gray-700 text-sm leading-relaxed">
                       Geetanjali Complex, near Mata Mandir Square,<br />
                       Kotra Sultanabad, Bhopal - 462003
                     </p>
@@ -186,21 +182,21 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Bottom Bar - Reduced spacing */}
-          <div className="border-t border-white/10 mt-12 pt-6 flex flex-col lg:flex-row items-center justify-between gap-3">
+          {/* Bottom Bar */}
+          <div className="border-t border-teal-100 mt-12 pt-6 flex flex-col lg:flex-row items-center justify-between gap-3">
             <p className="text-gray-500 text-xs text-center lg:text-left">
               © 2026 Dr. Anupriya Hajela Shah. All Rights Reserved.
             </p>
             
             <div className="flex items-center gap-4">
-              <p className="text-gray-600 text-xs">Advanced ENT Care</p>
-              <div className="w-1 h-1 rounded-full bg-cyan-500"></div>
-              <p className="text-gray-600 text-xs">Premium Healthcare</p>
-              <div className="w-1 h-1 rounded-full bg-cyan-500"></div>
-              <p className="text-gray-600 text-xs">Patient First</p>
+              <p className="text-teal-600 text-xs font-medium">Advanced ENT Care</p>
+              <div className="w-1 h-1 rounded-full bg-teal-400"></div>
+              <p className="text-teal-600 text-xs font-medium">Premium Healthcare</p>
+              <div className="w-1 h-1 rounded-full bg-teal-400"></div>
+              <p className="text-teal-600 text-xs font-medium">Patient First</p>
             </div>
             
-            <p className="text-cyan-500/60 text-xs font-medium">
+            <p className="text-teal-400 text-xs font-medium">
               Designed with ❤️ for Better Healthcare
             </p>
           </div>

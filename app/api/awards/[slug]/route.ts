@@ -1,37 +1,29 @@
+import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Award from "@/models/Award";
-import { NextResponse } from "next/server";
-
-type Props = {
-  params: Promise<{
-    slug: string;
-  }>;
-};
 
 export async function GET(
-  request: Request,
-  { params }: Props
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
     await connectDB();
-
     const { slug } = await params;
-
-    const award = await Award.findOne({ slug });
-
+    
+    const award = await Award.findOne({ slug }).lean();
+    
     if (!award) {
       return NextResponse.json(
-        { message: "Award not found" },
+        { success: false, error: "Award not found" },
         { status: 404 }
       );
     }
-
-    return NextResponse.json(award);
+    
+    return NextResponse.json({ success: true, data: award });
   } catch (error) {
-    console.log(error);
-
+    console.error("Error fetching award:", error);
     return NextResponse.json(
-      { message: "Failed to fetch award" },
+      { success: false, error: "Failed to fetch award" },
       { status: 500 }
     );
   }

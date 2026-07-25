@@ -43,8 +43,9 @@ export default function AboutPage() {
     { name: "MS (Gold Medalist)", icon: Trophy, color: "from-cyan-500 to-teal-500" },
     { name: "DNB ENT", icon: ShieldCheck, color: "from-indigo-600 to-blue-500" },
     { name: "KGMC Lucknow", icon: Hospital, color: "from-cyan-600 to-blue-600" },
-    { name: "Bombay Hospital Fellowship", icon: Briefcase, color: "from-blue-500 to-cyan-500" },
-    { name: "Chennai Fellowship", icon: Stethoscope, color: "from-cyan-600 to-indigo-600" },
+    { name: "Fellowship in Endoscopic sinus and skull base surgery, Bombay Hospital", icon: Briefcase, color: "from-blue-500 to-cyan-500" },
+    { name: "Fellowship in Allergy and Clinical immunology, Chennai", icon: Stethoscope, color: "from-cyan-600 to-indigo-600" },
+    { name: "Fellowship in Phonosurgery, Bombay Hospital", icon: Stethoscope, color: "from-cyan-600 to-indigo-600" },
   ];
 
   const facilities = [
@@ -55,7 +56,7 @@ export default function AboutPage() {
     "Diagnostic Nasal Endoscopy",
     "Speech & Voice Therapy",
     "Skin Prick Allergy Testing",
-    "Videolaryngoscopy",
+    "Videolaryngoscopy and Narrow Band Imaging",
   ];
 
   // Hero stats with icons
@@ -76,79 +77,100 @@ export default function AboutPage() {
 
   return (
     <main className="overflow-hidden bg-white">
-      {/* HERO - Premium */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#06111f] to-[#0a1622] pt-36 pb-20 lg:pb-24">
-        <div className="absolute top-0 left-0 w-[700px] h-[700px] bg-cyan-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-[700px] h-[700px] bg-blue-500/10 rounded-full blur-3xl"></div>
+      {/* HERO - Premium With Background Image */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#06111f] to-[#0a1622] pt-20 pb-12 sm:pt-28 sm:pb-16 lg:pt-32 lg:pb-20">
+        
+        {/* ✅ BACKGROUND IMAGE - PERFECT BLUR & SOLID */}
+        <div className="absolute inset-0">
+          {/* Background image - Halka sa blur */}
+          <img
+            src="/Images/anu3.jpeg"
+            alt="Background"
+            className="w-full h-full object-cover object-top scale-105 blur-[2px] opacity-50"
+          />
+          {/* Light dark overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#06111f]/70 via-[#0a1622]/60 to-[#06111f]/70" />
+          {/* Subtle gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/5 via-transparent to-blue-500/5" />
+        </div>
+
+        {/* Animated background elements */}
+        <div className="absolute top-0 left-0 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-cyan-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-blue-500/10 rounded-full blur-3xl"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* LEFT */}
+          <div className="grid lg:grid-cols-2 gap-6 sm:gap-10 lg:gap-12 items-center">
+            
+            {/* LEFT - Content */}
             <motion.div
-              initial={{ opacity: 0, x: -80 }}
+              initial={{ opacity: 0, x: -60 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
+              className="order-2 lg:order-1"
             >
-              <div className="inline-flex items-center gap-3 rounded-full bg-white/10 border border-white/10 backdrop-blur-xl px-5 py-2.5">
-                <ShieldCheck size={16} className="text-cyan-300" />
-                <span className="text-cyan-300 font-semibold text-sm tracking-wide">
+              <div className="inline-flex items-center gap-2 sm:gap-3 rounded-full bg-white/10 border border-white/10 backdrop-blur-xl px-3 sm:px-4 py-1.5 sm:py-2">
+                <ShieldCheck size={13} className="text-cyan-300 sm:size-[15px]" />
+                <span className="text-cyan-300 font-semibold text-[10px] sm:text-xs tracking-wide">
                   Advanced ENT Specialist • Bhopal
                 </span>
               </div>
 
-              <h1 className="mt-6 text-5xl sm:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight text-white">
+              <h1 className="mt-3 sm:mt-5 text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black leading-[1.05] tracking-tight text-white">
                 Dr. Anupriya
-                <span className="block text-cyan-300 mt-2">Hajela Shah</span>
+                <span className="block text-cyan-300 mt-0.5 sm:mt-1">Hajela Shah</span>
               </h1>
 
-              <p className="mt-6 max-w-3xl text-base lg:text-lg leading-relaxed text-gray-300">
+              <p className="mt-3 sm:mt-5 max-w-3xl text-xs sm:text-sm lg:text-base leading-relaxed text-gray-300">
                 Dr. Anupriya Hajela Shah is an experienced ENT Specialist
-                in Bhopal known for advanced ENT surgery,
-                cochlear implant rehabilitation,
-                skull base procedures,
-                allergy treatment,
+                of Bhopal known for advanced ENT surgeries,
+                Cochlear implant surgeries,
+                Endoscopic sinus and skull base procedures,
+                Allergy treatment,
                 and compassionate patient-focused care.
               </p>
 
-              {/* ACHIEVEMENTS BADGES WITH ICONS */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-8">
+              {/* ACHIEVEMENTS BADGES */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mt-4 sm:mt-6">
                 {achievements.map((item, idx) => (
-                  <div key={idx} className="rounded-2xl bg-white/10 backdrop-blur-2xl border border-white/10 p-3 text-center">
-                    <div className="flex items-center justify-center gap-2 mb-1">
-                      <item.icon size={14} className="text-cyan-300" />
-                      <span className="text-xl font-black text-white">{item.value}</span>
+                  <div key={idx} className="rounded-xl bg-white/10 backdrop-blur-2xl border border-white/10 p-2 sm:p-3 text-center">
+                    <div className="flex items-center justify-center gap-1 sm:gap-1.5 mb-0.5">
+                      <item.icon size={11} className="text-cyan-300 sm:size-[13px]" />
+                      <span className="text-sm sm:text-lg lg:text-xl font-black text-white">{item.value}</span>
                     </div>
-                    <p className="text-xs text-gray-300">{item.label}</p>
+                    <p className="text-[8px] sm:text-[10px] text-gray-300">{item.label}</p>
                   </div>
                 ))}
               </div>
             </motion.div>
 
-            {/* RIGHT */}
+            {/* RIGHT - Profile Card */}
             <motion.div
-              initial={{ opacity: 0, x: 80 }}
+              initial={{ opacity: 0, x: 60 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="relative"
+              className="relative order-1 lg:order-2"
             >
-              <div className="relative overflow-hidden rounded-3xl bg-white/10 border border-white/10 backdrop-blur-2xl p-3 shadow-2xl">
+              <div className="relative overflow-hidden rounded-2xl bg-white/10 border border-white/10 backdrop-blur-2xl p-1.5 sm:p-2 shadow-2xl max-w-[280px] sm:max-w-md mx-auto lg:max-w-full">
+                {/* Profile Image */}
                 <img
                   src="/Images/Anupriya.jpg"
                   alt="Dr. Anupriya Hajela Shah"
-                  className="w-full h-[500px] lg:h-[650px] object-cover rounded-2xl"
+                  className="w-full h-[240px] sm:h-[350px] lg:h-[420px] xl:h-[480px] object-cover object-top rounded-xl"
                 />
+                
+                {/* Floating Badge */}
                 <motion.div
-                  animate={{ y: [0, -8, 0] }}
+                  animate={{ y: [0, -6, 0] }}
                   transition={{ duration: 4, repeat: Infinity }}
-                  className="absolute bottom-6 left-6 right-6 rounded-2xl bg-black/50 backdrop-blur-2xl border border-white/10 p-4"
+                  className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 rounded-xl bg-black/50 backdrop-blur-2xl border border-white/10 p-2 sm:p-3"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg">
-                      <Award size={28} />
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg flex-shrink-0">
+                      <Award size={18} className="sm:size-[22px]" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-black text-white">Gold Medalist</h3>
-                      <p className="text-sm text-cyan-300">MBBS, MS, DNB ENT Specialist</p>
+                      <h3 className="text-sm sm:text-base lg:text-lg font-black text-white">Gold Medalist</h3>
+                      <p className="text-[10px] sm:text-xs text-cyan-300">MBBS, MS, DNB ENT Specialist</p>
                     </div>
                   </div>
                 </motion.div>
@@ -159,20 +181,20 @@ export default function AboutPage() {
       </section>
 
       {/* QUALIFICATIONS */}
-      <section className="py-20 lg:py-28 bg-white">
+      <section className="py-12 sm:py-16 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-50 to-blue-50 px-5 py-2.5 mb-6">
-              <GraduationCap size={16} className="text-cyan-600" />
-              <span className="text-cyan-700 font-bold text-sm">Qualifications & Fellowships</span>
+            <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-50 to-blue-50 px-3 sm:px-4 py-1.5 sm:py-2 mb-3 sm:mb-5">
+              <GraduationCap size={14} className="text-cyan-600 sm:size-[16px]" />
+              <span className="text-cyan-700 font-bold text-[10px] sm:text-xs">Qualifications & Fellowships</span>
             </div>
-            <h2 className="text-4xl lg:text-5xl font-black leading-tight text-slate-900">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-black leading-tight text-slate-900">
               Education &
               <span className="block text-cyan-600 mt-1">Medical Excellence</span>
             </h2>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-12">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mt-8 sm:mt-10">
             {qualifications.map((item, index) => (
               <motion.div
                 key={index}
@@ -181,13 +203,13 @@ export default function AboutPage() {
                 transition={{ duration: 0.5, delay: index * 0.05 }}
                 viewport={{ once: true }}
                 whileHover={{ y: -4 }}
-                className="group flex items-center gap-4 rounded-2xl bg-gradient-to-r from-gray-50 to-white border border-gray-100 p-5 shadow-sm hover:shadow-md transition-all duration-300"
+                className="group flex items-center gap-3 sm:gap-4 rounded-xl bg-gradient-to-r from-gray-50 to-white border border-gray-100 p-3 sm:p-4 shadow-sm hover:shadow-md transition-all duration-300"
               >
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${item.color} flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform duration-300`}>
-                  <item.icon size={20} />
+                <div className={`w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-r ${item.color} flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}>
+                  <item.icon size={15} className="sm:size-[18px]" />
                 </div>
                 <div>
-                  <h3 className="text-base font-black text-slate-800">{item.name}</h3>
+                  <h3 className="text-xs sm:text-sm lg:text-base font-black text-slate-800 leading-tight">{item.name}</h3>
                 </div>
               </motion.div>
             ))}
@@ -195,24 +217,24 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* TIMELINE - White Version */}
+      {/* TIMELINE */}
       <Timeline />
 
-      {/* EXPERTISE - With Unique Icons */}
-      <section className="py-20 lg:py-28 bg-gray-50">
+      {/* EXPERTISE */}
+      <section className="py-12 sm:py-16 lg:py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 shadow-sm mb-6">
-              <Microscope size={16} className="text-cyan-600" />
-              <span className="text-cyan-700 font-bold text-sm">Specialized Expertise</span>
+            <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 sm:px-4 py-1.5 sm:py-2 shadow-sm mb-3 sm:mb-5">
+              <Microscope size={14} className="text-cyan-600 sm:size-[16px]" />
+              <span className="text-cyan-700 font-bold text-[10px] sm:text-xs">Specialized Expertise</span>
             </div>
-            <h2 className="text-4xl lg:text-5xl font-black leading-tight text-slate-900">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-black leading-tight text-slate-900">
               Advanced ENT
               <span className="block text-cyan-600 mt-1">Procedures & Treatments</span>
             </h2>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-12">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-8 sm:mt-10">
             {expertise.map((item, index) => (
               <motion.div
                 key={index}
@@ -220,13 +242,13 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.04 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -6 }}
-                className="group rounded-2xl bg-white border border-gray-100 p-5 shadow-sm hover:shadow-lg transition-all duration-300"
+                whileHover={{ y: -5 }}
+                className="group rounded-xl bg-white border border-gray-100 p-3 sm:p-4 shadow-sm hover:shadow-lg transition-all duration-300"
               >
-                <div className={`w-10 h-10 rounded-xl bg-gradient-to-r ${item.color} flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform duration-300`}>
-                  <item.icon size={18} />
+                <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-r ${item.color} flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform duration-300`}>
+                  <item.icon size={14} className="sm:size-[16px]" />
                 </div>
-                <h3 className="mt-4 text-sm font-black text-slate-800 leading-tight">
+                <h3 className="mt-2 sm:mt-3 text-[11px] sm:text-sm font-black text-slate-800 leading-tight">
                   {item.title}
                 </h3>
               </motion.div>
@@ -236,20 +258,20 @@ export default function AboutPage() {
       </section>
 
       {/* FACILITIES */}
-      <section className="py-20 lg:py-28 bg-white">
+      <section className="py-12 sm:py-16 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-50 to-blue-50 px-5 py-2.5 mb-6">
-              <Activity size={16} className="text-cyan-600" />
-              <span className="text-cyan-700 font-bold text-sm">Scope Of Facilities</span>
+            <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-50 to-blue-50 px-3 sm:px-4 py-1.5 sm:py-2 mb-3 sm:mb-5">
+              <Activity size={14} className="text-cyan-600 sm:size-[16px]" />
+              <span className="text-cyan-700 font-bold text-[10px] sm:text-xs">Scope Of Facilities</span>
             </div>
-            <h2 className="text-4xl lg:text-5xl font-black leading-tight text-slate-900">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-black leading-tight text-slate-900">
               Modern ENT
               <span className="block text-cyan-600 mt-1">Diagnostic Facilities</span>
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4 mt-12">
+          <div className="grid md:grid-cols-2 gap-3 sm:gap-4 mt-8 sm:mt-10">
             {facilities.map((item, index) => (
               <motion.div
                 key={index}
@@ -257,36 +279,36 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
                 viewport={{ once: true }}
-                className="flex items-center gap-4 rounded-2xl bg-gradient-to-r from-gray-50 to-white border border-gray-100 p-5 shadow-sm hover:shadow-md transition-all duration-300 group"
+                className="flex items-center gap-3 sm:gap-4 rounded-xl bg-gradient-to-r from-gray-50 to-white border border-gray-100 p-3 sm:p-4 shadow-sm hover:shadow-md transition-all duration-300 group"
               >
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform duration-300">
-                  <CheckCircle2 size={18} />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                  <CheckCircle2 size={14} className="sm:size-[16px]" />
                 </div>
-                <h3 className="text-base font-bold text-slate-700">{item}</h3>
+                <h3 className="text-xs sm:text-sm lg:text-base font-bold text-slate-700">{item}</h3>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* AWARDS & ACHIEVEMENTS - New Section */}
-      <section className="py-20 lg:py-28 bg-gradient-to-br from-cyan-50 to-blue-50">
+      {/* AWARDS & ACHIEVEMENTS */}
+      <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-br from-cyan-50 to-blue-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
           <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 shadow-sm mb-6">
-              <Trophy size={16} className="text-amber-600" />
-              <span className="text-amber-700 font-bold text-sm">Recognitions</span>
+            <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 sm:px-4 py-1.5 sm:py-2 shadow-sm mb-3 sm:mb-5">
+              <Trophy size={14} className="text-amber-600 sm:size-[16px]" />
+              <span className="text-amber-700 font-bold text-[10px] sm:text-xs">Recognitions</span>
             </div>
-            <h2 className="text-4xl lg:text-5xl font-black leading-tight text-slate-900">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-black leading-tight text-slate-900">
               Awards &
               <span className="block text-amber-600 mt-1">Professional Achievements</span>
             </h2>
-            <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
+            <p className="mt-2 sm:mt-3 text-xs sm:text-sm lg:text-base text-gray-600 max-w-2xl mx-auto">
               Recognized for excellence in ENT surgery and patient care
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 mt-8 sm:mt-10">
             {awards.map((item, index) => (
               <motion.div
                 key={index}
@@ -294,14 +316,14 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -8, scale: 1.02 }}
-                className="group relative bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 text-center border border-gray-100"
+                whileHover={{ y: -6, scale: 1.02 }}
+                className="group relative bg-white rounded-xl p-4 sm:p-5 shadow-lg hover:shadow-2xl transition-all duration-300 text-center border border-gray-100"
               >
-                <div className={`w-16 h-16 mx-auto rounded-2xl bg-gradient-to-r ${item.color} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 mb-4`}>
-                  <item.icon size={28} />
+                <div className={`w-12 h-12 sm:w-14 sm:h-14 mx-auto rounded-xl bg-gradient-to-r ${item.color} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 mb-2 sm:mb-3`}>
+                  <item.icon size={20} className="sm:size-[24px]" />
                 </div>
-                <h3 className="text-base font-black text-slate-800 mb-1">{item.title}</h3>
-                <p className="text-xs text-gray-500">{item.desc}</p>
+                <h3 className="text-xs sm:text-sm lg:text-base font-black text-slate-800 mb-0.5">{item.title}</h3>
+                <p className="text-[10px] sm:text-xs text-gray-500">{item.desc}</p>
               </motion.div>
             ))}
           </div>
