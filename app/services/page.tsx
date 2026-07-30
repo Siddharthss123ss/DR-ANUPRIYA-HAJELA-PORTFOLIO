@@ -253,7 +253,7 @@ const procedureDetails: Record<string, ProcedureDetail> = {
     category: "NOSE",
     icon: Wind,
   },
-  "Olfactory (Smell) Testing": {
+  "Olfactory": {
     name: "Olfactory (Smell) Testing",
     description: "Specialized testing of the sense of smell to diagnose olfactory disorders and sinus conditions.",
     category: "NOSE",
@@ -351,12 +351,12 @@ const procedureDetails: Record<string, ProcedureDetail> = {
   },
 
   // ========== THROAT PROCEDURES ==========
-  "OPD": {
-    name: "OPD Consultation",
-    description: "Comprehensive outpatient consultation for throat disorders including detailed history and examination.",
-    category: "THROAT",
-    icon: Mic,
-  },
+  // "OPD": {
+  //   name: "OPD Consultation",
+  //   description: "Comprehensive outpatient consultation for throat disorders including detailed history and examination.",
+  //   category: "THROAT",
+  //   icon: Mic,
+  // },
   "Voice & Swallow Therapy": {
     name: "Voice & Swallow Therapy",
     description: "Specialized therapy for voice disorders and swallowing difficulties using evidence-based techniques.",
@@ -375,7 +375,7 @@ const procedureDetails: Record<string, ProcedureDetail> = {
     category: "THROAT",
     icon: Mic,
   },
-  "TNE": {
+  "Transnasal esophagoscopy (TNE)": {
     name: "Transnasal Esophagoscopy (TNE)",
     description: "Minimally invasive examination of the esophagus using a thin flexible scope through the nose.",
     category: "THROAT",
@@ -597,18 +597,17 @@ const procedureCategories = [
     border: "border-purple-200",
     text: "text-purple-700",
     procedures: [
-      "OPD",
+
       "Voice & Swallow Therapy",
       "Sleep Medicine & Snoring Clinic",
       "Flexible & Rigid Laryngoscopy",
-      "TNE",
-      "VFSS",
+      "Transnasal esophagoscopy (TNE)",
+      "Videofluoroscopic Swallow Study(VFSS)",
       "Microlaryngeal Surgery",
       "Tracheostomy",
       "UPPP & Snoroplasty",
       "Thyroidectomy",
-      "Tonsillectomy",
-      "Adenoidectomy",
+      "Coblation Adenoidectomy",
       "Coblation Tonsillectomy",
       "Tonsillolith Removal",
       "Narrow Band Imaging (NBI)",

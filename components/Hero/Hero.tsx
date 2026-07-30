@@ -29,7 +29,7 @@ export default function Hero() {
           }}
         >
           <source
-            src="/videos/anu.mp4"
+            src="/videos/herov.mp4"
             type="video/mp4"
           />
         </video>
