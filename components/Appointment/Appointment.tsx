@@ -83,7 +83,7 @@ export default function Contact() {
               <Ambulance size={26} className="sm:size-[28px]" />
             </div>
             <h3 className="text-lg sm:text-xl font-black text-gray-900">24/7 Emergency</h3>
-            <p className="text-2xl sm:text-3xl font-bold text-teal-600 mt-3">+91 7552773393</p>
+            <p className="text-2xl sm:text-3xl font-bold text-teal-600 mt-3">+91 9575052525</p>
             <div className="flex items-center gap-2 mt-3">
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
               <span className="text-xs sm:text-sm text-gray-500 font-medium">Available 24x7</span>

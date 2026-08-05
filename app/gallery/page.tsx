@@ -6,7 +6,6 @@ import axios from 'axios';
 import { 
   Sparkles, 
   Camera, 
-  HeartPulse,
   Crown,
   Star,
   ZoomIn,
@@ -98,7 +97,6 @@ function ImageLightbox({
       className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4"
       onClick={onClose}
     >
-      {/* Close Button */}
       <button
         onClick={onClose}
         className="absolute top-4 right-4 text-white/70 hover:text-white p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all z-10"
@@ -106,12 +104,10 @@ function ImageLightbox({
         <X size={28} />
       </button>
 
-      {/* Image Counter */}
       <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white/50 text-sm font-medium bg-black/40 px-4 py-2 rounded-full backdrop-blur-sm">
         {index + 1} / {images.length}
       </div>
 
-      {/* Main Image */}
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -128,7 +124,6 @@ function ImageLightbox({
           />
         </div>
 
-        {/* Image Info */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -144,7 +139,6 @@ function ImageLightbox({
           </span>
         </motion.div>
 
-        {/* Navigation Buttons */}
         {images.length > 1 && (
           <>
             <button
@@ -162,7 +156,6 @@ function ImageLightbox({
           </>
         )}
 
-        {/* Action Buttons */}
         <div className="absolute bottom-24 right-4 flex flex-col gap-2">
           <button
             onClick={(e) => { e.stopPropagation(); handleDownload(); }}
@@ -225,7 +218,6 @@ export default function GalleryPage() {
     fetchImages();
   }, []);
 
-  // Open lightbox
   const openLightbox = (index: number) => {
     setSelectedImageIndex(index);
   };
@@ -274,21 +266,17 @@ export default function GalleryPage() {
   return (
     <>
       <div className="min-h-screen bg-gradient-to-b from-[#0a0a1a] via-teal-950/90 to-[#0a0a1a] py-16 px-4">
-        {/* Premium Glow Effects */}
         <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-teal-500/8 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-amber-500/8 rounded-full blur-3xl"></div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          {/* ============================================ */}
-          {/* HEADER - Premium Minimal */}
-          {/* ============================================ */}
+          {/* HEADER */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center max-w-4xl mx-auto mb-16"
           >
-            {/* Royal Badge */}
             <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-gradient-to-r from-amber-500/10 via-teal-500/10 to-amber-500/10 border border-amber-400/20 backdrop-blur-xl shadow-2xl shadow-amber-500/5 mb-6">
               <Crown size={16} className="text-amber-400" />
               <span className="text-amber-300/90 font-semibold tracking-[3px] uppercase text-xs">
@@ -297,7 +285,6 @@ export default function GalleryPage() {
               <Sparkles size={14} className="text-amber-400" />
             </div>
 
-            {/* Title */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.1]">
               <span className="text-white">Inside Our</span>
               <span className="block bg-gradient-to-r from-amber-200 via-teal-300 to-amber-200 bg-clip-text text-transparent mt-2">
@@ -305,7 +292,6 @@ export default function GalleryPage() {
               </span>
             </h1>
 
-            {/* Decorative Line */}
             <div className="flex items-center justify-center gap-3 mt-6">
               <div className="h-px w-12 bg-gradient-to-r from-transparent to-amber-400/30"></div>
               <div className="flex items-center gap-1.5">
@@ -316,12 +302,10 @@ export default function GalleryPage() {
               <div className="h-px w-12 bg-gradient-to-l from-transparent to-amber-400/30"></div>
             </div>
 
-            {/* Subtitle */}
             <p className="mt-5 text-gray-300/70 max-w-2xl mx-auto text-sm tracking-wide font-light">
               Experience world-class healthcare through our premium collection
             </p>
 
-            {/* Image Count */}
             <div className="mt-4 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/5 border border-white/5 backdrop-blur-sm">
               <Camera size={14} className="text-amber-400/70" />
               <span className="text-amber-300/50 text-xs font-light tracking-wider">
@@ -331,7 +315,7 @@ export default function GalleryPage() {
           </motion.div>
 
           {/* ============================================ */}
-          {/* GALLERY GRID - Premium Minimal */}
+          {/* ✅ GALLERY GRID - ULTRA FIXED HEIGHT */}
           {/* ============================================ */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {images.map((image, index) => (
@@ -347,16 +331,26 @@ export default function GalleryPage() {
                 className="group relative overflow-hidden rounded-2xl bg-white/5 border border-white/5 hover:border-amber-400/30 transition-all duration-500 cursor-pointer hover:shadow-xl hover:shadow-amber-500/5"
                 onClick={() => openLightbox(index)}
               >
-                <div className="relative aspect-square w-full overflow-hidden">
+                {/* ✅ ULTRA FIX: Fixed height with bg color */}
+                <div 
+                  className="relative w-full overflow-hidden bg-gray-800/50"
+                  style={{ height: '350px' }}
+                >
                   <img
                     src={image.imageUrl}
                     alt={image.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                    style={{ 
+                      width: '100%', 
+                      height: '100%', 
+                      objectFit: 'cover',
+                      display: 'block'
+                    }}
                   />
                   
                   {/* Dark Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-5">
-                    <h3 className="text-white font-bold text-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    <h3 className="text-white font-bold text-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 line-clamp-1">
                       {image.title}
                     </h3>
                     {image.description && (
@@ -398,9 +392,7 @@ export default function GalleryPage() {
         </div>
       </div>
 
-      {/* ============================================ */}
-      {/* LIGHTBOX - Premium Modal */}
-      {/* ============================================ */}
+      {/* LIGHTBOX */}
       {selectedImageIndex !== null && (
         <ImageLightbox
           images={images}

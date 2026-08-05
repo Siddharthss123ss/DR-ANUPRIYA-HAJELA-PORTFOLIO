@@ -7,7 +7,7 @@ import { verifyAdmin } from '@/lib/auth';
 // ============================================
 // ✅ POST - Upload Image
 // ============================================
-export async function POST(request: NextRequest) { // ✅ NextRequest
+export async function POST(request: NextRequest) {
   try {
     console.log('🚀 1. Upload request received');
 
@@ -119,9 +119,8 @@ export async function POST(request: NextRequest) { // ✅ NextRequest
 // ============================================
 // 🗑️ DELETE - Delete Image (by ID in query params)
 // ============================================
-export async function DELETE(request: NextRequest) { // ✅ NextRequest
+export async function DELETE(request: NextRequest) {
   try {
-    // Get ID from URL query params
     const url = new URL(request.url);
     const id = url.searchParams.get('id');
     
@@ -134,7 +133,6 @@ export async function DELETE(request: NextRequest) { // ✅ NextRequest
       );
     }
 
-    // 1. Admin verify
     const authResult = await verifyAdmin(request);
     if (!authResult.success) {
       return NextResponse.json(
@@ -144,11 +142,9 @@ export async function DELETE(request: NextRequest) { // ✅ NextRequest
     }
     console.log('✅ Auth passed');
 
-    // 2. DB connect
     await connectDB();
     console.log('✅ DB connected');
 
-    // 3. Image find
     const image = await Gallery.findById(id);
     if (!image) {
       console.log('❌ Image not found:', id);
@@ -159,18 +155,15 @@ export async function DELETE(request: NextRequest) { // ✅ NextRequest
     }
     console.log('✅ Image found:', image.title);
 
-    // 4. Cloudinary se delete
     if (image.cloudinaryId) {
       try {
         const result = await cloudinary.uploader.destroy(image.cloudinaryId);
         console.log('✅ Cloudinary deleted:', result);
       } catch (cloudinaryError) {
         console.error('⚠️ Cloudinary delete error:', cloudinaryError);
-        // Cloudinary fail ho toh bhi database se delete karenge
       }
     }
 
-    // 5. Database se delete
     await image.deleteOne();
     console.log('✅ Database deleted');
 
@@ -189,11 +182,10 @@ export async function DELETE(request: NextRequest) { // ✅ NextRequest
 }
 
 // ============================================
-// 📝 PUT - Update Image
+// 📝 PUT - Update Image (FIXED)
 // ============================================
-export async function PUT(request: NextRequest) { // ✅ NextRequest
+export async function PUT(request: NextRequest) {
   try {
-    // Get ID from URL query params
     const url = new URL(request.url);
     const id = url.searchParams.get('id');
     
@@ -225,14 +217,42 @@ export async function PUT(request: NextRequest) { // ✅ NextRequest
     }
 
     const body = await request.json();
-    const { title, description, category, isFeatured } = body;
+    console.log('📝 Update body:', body);
 
-    if (title !== undefined) image.title = title;
-    if (description !== undefined) image.description = description;
-    if (category !== undefined) image.category = category;
-    if (isFeatured !== undefined) image.isFeatured = isFeatured;
+    // ✅ Sirf jo fields aayi hain unko update karo
+    let isUpdated = false;
+    
+    if (body.isFeatured !== undefined) {
+      image.isFeatured = body.isFeatured;
+      isUpdated = true;
+    }
+    
+    if (body.title !== undefined && body.title.trim() !== '') {
+      image.title = body.title.trim();
+      isUpdated = true;
+    }
+    
+    if (body.description !== undefined) {
+      image.description = body.description.trim();
+      isUpdated = true;
+    }
+    
+    if (body.category !== undefined && body.category !== '') {
+      image.category = body.category;
+      isUpdated = true;
+    }
 
+    if (!isUpdated) {
+      return NextResponse.json(
+        { success: false, message: 'No valid fields to update' },
+        { status: 400 }
+      );
+    }
+
+    // ✅ Save with validation
     await image.save();
+
+    console.log('✅ Image updated successfully:', image._id);
 
     return NextResponse.json({
       success: true,
@@ -242,6 +262,16 @@ export async function PUT(request: NextRequest) { // ✅ NextRequest
 
   } catch (error: any) {
     console.error('❌ Update error:', error);
+    
+    // ✅ Better error message for validation errors
+    if (error.name === 'ValidationError') {
+      const errors = Object.values(error.errors).map((e: any) => e.message);
+      return NextResponse.json(
+        { success: false, message: `Validation error: ${errors.join(', ')}` },
+        { status: 400 }
+      );
+    }
+    
     return NextResponse.json(
       { success: false, message: error.message || 'Update failed' },
       { status: 500 }
@@ -250,9 +280,9 @@ export async function PUT(request: NextRequest) { // ✅ NextRequest
 }
 
 // ============================================
-// 📋 GET - Get All Images (Optional)
+// 📋 GET - Get All Images
 // ============================================
-export async function GET(request: NextRequest) { // ✅ NextRequest
+export async function GET(request: NextRequest) {
   try {
     await connectDB();
     
@@ -271,6 +301,7 @@ export async function GET(request: NextRequest) { // ✅ NextRequest
       data: images,
     });
   } catch (error: any) {
+    console.error('❌ GET error:', error);
     return NextResponse.json(
       { success: false, message: error.message || 'Failed to fetch images' },
       { status: 500 }

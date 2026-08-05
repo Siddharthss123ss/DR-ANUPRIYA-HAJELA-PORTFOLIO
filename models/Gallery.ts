@@ -1,11 +1,11 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IGallery extends Document {
-  title: string;
+  title?: string;  // ✅ Optional
   description?: string;
   imageUrl: string;
   cloudinaryId: string;
-  category: 'surgery' | 'consultation' | 'clinic' | 'team' | 'events' | 'other';
+  category?: string;  // ✅ Optional
   isFeatured: boolean;
   uploadedBy: string;
   createdAt: Date;
@@ -52,7 +52,6 @@ const GallerySchema = new Schema<IGallery>(
   }
 );
 
-// Index for better query performance
 GallerySchema.index({ category: 1, createdAt: -1 });
 GallerySchema.index({ isFeatured: 1 });
 

@@ -6,31 +6,31 @@ import Link from 'next/link';
 import { toast, Toaster } from 'react-hot-toast';
 import { 
   Trash2, 
-  Star, 
   Upload, 
   LogOut, 
   Image as ImageIcon,
   Loader2,
   X,
+  Camera,
   Award,
-  LayoutDashboard,
   Edit2,
   Save,
   Ban
 } from 'lucide-react';
 
-interface GalleryImage {
+interface AwardItem {
   _id: string;
   title: string;
   description: string;
-  imageUrl: string;
-  category: string;
-  isFeatured: boolean;
+  year: string;
+  image: string;
+  cloudinaryId: string;
+  slug: string;
   createdAt: string;
 }
 
-export default function AdminGallery() {
-  const [images, setImages] = useState<GalleryImage[]>([]);
+export default function AdminAwards() {
+  const [awards, setAwards] = useState<AwardItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -41,13 +41,12 @@ export default function AdminGallery() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    category: 'other',
-    isFeatured: false,
+    year: '',
   });
   const [editFormData, setEditFormData] = useState({
     title: '',
     description: '',
-    category: 'other',
+    year: '',
   });
   const router = useRouter();
 
@@ -63,16 +62,16 @@ export default function AdminGallery() {
   useEffect(() => {
     const token = getToken();
     if (token) {
-      fetchImages();
+      fetchAwards();
     }
   }, []);
 
-  const fetchImages = async () => {
+  const fetchAwards = async () => {
     try {
       const token = getToken();
       if (!token) return;
 
-      const res = await fetch('/api/gallery', {
+      const res = await fetch('/api/awards', {
         headers: { 
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -86,19 +85,18 @@ export default function AdminGallery() {
         return;
       }
 
-      if (!res.ok) {
-        throw new Error('Failed to fetch images');
-      }
-      
       const data = await res.json();
-      if (data.success) {
-        setImages(data.data || []);
+      
+      if (Array.isArray(data)) {
+        setAwards(data);
+      } else if (data.success && data.data) {
+        setAwards(data.data);
       } else {
-        throw new Error(data.message || 'Failed to fetch images');
+        setAwards([]);
       }
     } catch (error: any) {
-      console.error('Error fetching images:', error);
-      toast.error(error.message || 'Failed to load images');
+      console.error('Error fetching awards:', error);
+      toast.error('Failed to load awards');
     } finally {
       setLoading(false);
     }
@@ -133,8 +131,8 @@ export default function AdminGallery() {
       return;
     }
 
-    if (!formData.title.trim()) {
-      toast.error('Title is required');
+    if (!formData.title.trim() || !formData.description.trim() || !formData.year.trim()) {
+      toast.error('All fields are required');
       return;
     }
 
@@ -143,8 +141,7 @@ export default function AdminGallery() {
     formDataObj.append('image', selectedFile);
     formDataObj.append('title', formData.title.trim());
     formDataObj.append('description', formData.description.trim());
-    formDataObj.append('category', formData.category);
-    formDataObj.append('isFeatured', String(formData.isFeatured));
+    formDataObj.append('year', formData.year.trim());
 
     try {
       const token = getToken();
@@ -153,7 +150,7 @@ export default function AdminGallery() {
         return;
       }
       
-      const res = await fetch('/api/gallery/admin', {
+      const res = await fetch('/api/awards/admin', {
         method: 'POST',
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -169,22 +166,17 @@ export default function AdminGallery() {
         return;
       }
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || 'Upload failed');
-      }
-
       const data = await res.json();
 
       if (data.success) {
-        toast.success('Image uploaded successfully! 🎉');
+        toast.success('Award added successfully! 🎉');
         setSelectedFile(null);
         setPreview(null);
         setShowUploadForm(false);
-        setFormData({ title: '', description: '', category: 'other', isFeatured: false });
+        setFormData({ title: '', description: '', year: '' });
         const fileInput = document.getElementById('fileInput') as HTMLInputElement;
         if (fileInput) fileInput.value = '';
-        await fetchImages();
+        await fetchAwards();
       } else {
         toast.error(data.message || 'Upload failed');
       }
@@ -197,7 +189,7 @@ export default function AdminGallery() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this image?')) {
+    if (!confirm('Are you sure you want to delete this award?')) {
       return;
     }
 
@@ -210,7 +202,7 @@ export default function AdminGallery() {
         return;
       }
 
-      const res = await fetch(`/api/gallery/admin?id=${id}`, {
+      const res = await fetch(`/api/awards/admin?id=${id}`, {
         method: 'DELETE',
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -225,50 +217,39 @@ export default function AdminGallery() {
         return;
       }
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || 'Delete failed');
-      }
-
       const data = await res.json();
 
       if (data.success) {
-        toast.success('Image deleted successfully! 🗑️');
-        setImages(prev => prev.filter(img => img._id !== id));
-        await fetchImages();
+        toast.success('Award deleted successfully! 🗑️');
+        await fetchAwards();
       } else {
         toast.error(data.message || 'Delete failed');
-        await fetchImages();
       }
     } catch (error: any) {
       console.error('Delete error:', error);
       toast.error(error.message || 'Delete failed');
-      await fetchImages();
     } finally {
       setDeletingId(null);
     }
   };
 
-  // ✅ EDIT - Start
-  const startEditing = (image: GalleryImage) => {
-    setEditingId(image._id);
+  const startEditing = (award: AwardItem) => {
+    setEditingId(award._id);
     setEditFormData({
-      title: image.title,
-      description: image.description || '',
-      category: image.category,
+      title: award.title,
+      description: award.description,
+      year: award.year,
     });
   };
 
-  // ✅ EDIT - Cancel
   const cancelEditing = () => {
     setEditingId(null);
-    setEditFormData({ title: '', description: '', category: 'other' });
+    setEditFormData({ title: '', description: '', year: '' });
   };
 
-  // ✅ EDIT - Save
   const saveEdit = async (id: string) => {
-    if (!editFormData.title.trim()) {
-      toast.error('Title is required');
+    if (!editFormData.title.trim() || !editFormData.description.trim() || !editFormData.year.trim()) {
+      toast.error('All fields are required');
       return;
     }
 
@@ -276,7 +257,7 @@ export default function AdminGallery() {
       const token = getToken();
       if (!token) return;
 
-      const res = await fetch(`/api/gallery/admin?id=${id}`, {
+      const res = await fetch(`/api/awards/admin?id=${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -285,7 +266,7 @@ export default function AdminGallery() {
         body: JSON.stringify({
           title: editFormData.title.trim(),
           description: editFormData.description.trim(),
-          category: editFormData.category,
+          year: editFormData.year.trim(),
         }),
       });
 
@@ -296,18 +277,13 @@ export default function AdminGallery() {
         return;
       }
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || 'Update failed');
-      }
-
       const data = await res.json();
 
       if (data.success) {
-        toast.success('Image updated successfully! ✏️');
+        toast.success('Award updated successfully! ✏️');
         setEditingId(null);
-        setEditFormData({ title: '', description: '', category: 'other' });
-        await fetchImages();
+        setEditFormData({ title: '', description: '', year: '' });
+        await fetchAwards();
       } else {
         toast.error(data.message || 'Update failed');
       }
@@ -327,7 +303,7 @@ export default function AdminGallery() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#0a0a1a] via-teal-950/90 to-[#0a0a1a]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-amber-400 mx-auto"></div>
-          <p className="text-gray-400 mt-4 font-medium">Loading gallery...</p>
+          <p className="text-gray-400 mt-4 font-medium">Loading awards...</p>
         </div>
       </div>
     );
@@ -347,40 +323,31 @@ export default function AdminGallery() {
         }}
       />
 
-      {/* HEADER */}
+      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold text-white flex items-center gap-2">
-            🖼️ Gallery Management
+            🏆 Awards Management
           </h1>
           <p className="text-gray-400 mt-1">
-            {images.length} {images.length === 1 ? 'image' : 'images'} in your gallery
+            {awards.length} {awards.length === 1 ? 'award' : 'awards'} in your collection
           </p>
         </div>
-        
         <div className="flex gap-3 flex-wrap">
-          <Link href="/admin">
-            <button className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-400/20 rounded-xl text-white font-medium hover:from-purple-500/30 hover:to-pink-500/30 transition-all duration-300">
-              <LayoutDashboard size={18} className="text-purple-400" />
-              Dashboard
-            </button>
-          </Link>
-          
-          <Link href="/admin/awards">
-            <button className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border border-amber-400/20 rounded-xl text-white font-medium hover:from-amber-500/30 hover:to-yellow-500/30 transition-all duration-300">
-              <Award size={18} className="text-amber-400" />
-              Awards
+          <Link href="/admin/gallery">
+            <button className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-teal-500/20 to-cyan-500/20 border border-teal-400/20 rounded-xl text-white font-medium hover:from-teal-500/30 hover:to-cyan-500/30 transition-all duration-300">
+              <Camera size={18} className="text-teal-400" />
+              Gallery
             </button>
           </Link>
           
           <button
             onClick={() => setShowUploadForm(!showUploadForm)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500/20 to-teal-500/20 border border-amber-400/20 rounded-xl text-white font-medium hover:from-amber-500/30 hover:to-teal-500/30 transition-all duration-300"
+            className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border border-amber-400/20 rounded-xl text-white font-medium hover:from-amber-500/30 hover:to-yellow-500/30 transition-all duration-300"
           >
             <Upload size={18} className="text-amber-400" />
-            {showUploadForm ? 'Cancel' : 'Upload New'}
+            {showUploadForm ? 'Cancel' : 'Add Award'}
           </button>
-          
           <button
             onClick={handleLogout}
             className="flex items-center gap-2 px-5 py-2.5 bg-red-500/10 border border-red-400/20 rounded-xl text-red-400 font-medium hover:bg-red-500/20 transition-all duration-300"
@@ -396,7 +363,7 @@ export default function AdminGallery() {
         <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 mb-8">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-white flex items-center gap-2">
-              📤 Upload New Image
+              🏆 Add New Award
             </h2>
             <button
               onClick={() => setShowUploadForm(false)}
@@ -410,7 +377,7 @@ export default function AdminGallery() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Image <span className="text-red-400">*</span>
+                  Award Image <span className="text-red-400">*</span>
                 </label>
                 <div 
                   className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-all ${
@@ -450,8 +417,8 @@ export default function AdminGallery() {
                     </div>
                   ) : (
                     <div className="py-8">
-                      <ImageIcon size={48} className="mx-auto text-gray-500" />
-                      <p className="text-gray-400 mt-2">Click to select image</p>
+                      <Award size={48} className="mx-auto text-gray-500" />
+                      <p className="text-gray-400 mt-2">Click to select award image</p>
                       <p className="text-gray-500 text-sm mt-1">PNG, JPG, WEBP (Max 5MB)</p>
                     </div>
                   )}
@@ -465,58 +432,40 @@ export default function AdminGallery() {
                   </label>
                   <input
                     type="text"
-                    placeholder="Enter image title"
+                    placeholder="e.g., Best ENT Specialist"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/20 transition-all"
                     required
-                    maxLength={100}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Description
+                    Description <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="text"
-                    placeholder="Brief description (optional)"
+                    placeholder="Brief description of the award"
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/20 transition-all"
-                    maxLength={500}
+                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-amber-400/50 transition-all"
+                    required
                   />
                 </div>
 
-                <div className="flex gap-4">
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
-                      Category
-                    </label>
-                    <select
-                      value={formData.category}
-                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:border-amber-400/50 focus:ring-2 focus:ring-amber-400/20 transition-all"
-                    >
-                      <option value="surgery">🔬 Surgery</option>
-                      <option value="consultation">💊 Consultation</option>
-                      <option value="clinic">🏥 Clinic</option>
-                      <option value="team">👥 Team</option>
-                      <option value="events">🎪 Events</option>
-                      <option value="other">📌 Other</option>
-                    </select>
-                  </div>
-                  <div className="flex items-end pb-1">
-                    <label className="flex items-center gap-2 cursor-pointer text-gray-300">
-                      <input
-                        type="checkbox"
-                        checked={formData.isFeatured}
-                        onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
-                        className="w-4 h-4 text-amber-400 rounded focus:ring-amber-400 focus:ring-offset-0 bg-white/10 border-white/20"
-                      />
-                      <span className="text-sm font-medium">⭐ Featured</span>
-                    </label>
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Year <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g., 2024"
+                    value={formData.year}
+                    onChange={(e) => setFormData({ ...formData, year: e.target.value })}
+                    className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-amber-400/50 transition-all"
+                    required
+                  />
                 </div>
               </div>
             </div>
@@ -524,17 +473,17 @@ export default function AdminGallery() {
             <button
               type="submit"
               disabled={uploading || !selectedFile}
-              className="w-full py-3 bg-gradient-to-r from-amber-500/20 to-teal-500/20 border border-amber-400/20 rounded-xl text-white font-semibold hover:from-amber-500/30 hover:to-teal-500/30 hover:border-amber-400/40 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2"
+              className="w-full py-3 bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border border-amber-400/20 rounded-xl text-white font-semibold hover:from-amber-500/30 hover:to-yellow-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2"
             >
               {uploading ? (
                 <>
                   <Loader2 size={20} className="animate-spin" />
-                  Uploading...
+                  Adding Award...
                 </>
               ) : (
                 <>
                   <Upload size={20} />
-                  Upload Image
+                  Add Award
                 </>
               )}
             </button>
@@ -542,66 +491,31 @@ export default function AdminGallery() {
         </div>
       )}
 
-      {/* ✅ GALLERY GRID - Only Delete + Edit Buttons */}
-      {images.length > 0 ? (
+      {/* ✅ Awards Grid - BUTTONS IN CARD FOOTER (Always Visible) */}
+      {awards.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {images.map((image) => (
+          {awards.map((award) => (
             <div
-              key={image._id}
+              key={award._id}
               className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden hover:border-amber-400/30 hover:shadow-xl hover:shadow-amber-500/5 transition-all duration-300"
             >
-              {/* Image Section */}
+              {/* Image */}
               <div className="relative h-52 bg-gray-800/50 overflow-hidden">
                 <img
-                  src={image.imageUrl}
-                  alt={image.title}
+                  src={award.image}
+                  alt={award.title}
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x300/1a1a2e/4a4a6a?text=Image+Not+Found';
-                  }}
                 />
                 
-                {/* Featured Badge - Only for display */}
-                {image.isFeatured && (
-                  <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-400 to-amber-500 text-black text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10">
-                    ⭐ Featured
-                  </div>
-                )}
-                
-                {/* Category Badge */}
-                <span className="absolute bottom-3 left-3 bg-black/70 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full capitalize z-10">
-                  {image.category}
-                </span>
-
-                {/* ✅ DELETE + EDIT Buttons - ALWAYS VISIBLE */}
-                <div className="absolute top-3 left-3 flex gap-2 z-20">
-                  <button
-                    onClick={() => handleDelete(image._id)}
-                    disabled={deletingId === image._id}
-                    className="bg-red-500/90 hover:bg-red-600 text-white p-2 rounded-lg shadow-lg disabled:opacity-50 transition-all"
-                    title="Delete Image"
-                  >
-                    {deletingId === image._id ? (
-                      <Loader2 size={16} className="animate-spin" />
-                    ) : (
-                      <Trash2 size={16} />
-                    )}
-                  </button>
-                  
-                  <button
-                    onClick={() => startEditing(image)}
-                    className="bg-blue-500/90 hover:bg-blue-600 text-white p-2 rounded-lg shadow-lg transition-all"
-                    title="Edit Image"
-                  >
-                    <Edit2 size={16} />
-                  </button>
+                <div className="absolute top-3 right-3 bg-gradient-to-r from-amber-400 to-amber-500 text-black text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10">
+                  {award.year}
                 </div>
               </div>
 
-              {/* Content Section */}
+              {/* Content */}
               <div className="p-4">
-                {/* ✅ EDIT MODE */}
-                {editingId === image._id ? (
+                {/* EDIT MODE */}
+                {editingId === award._id ? (
                   <div className="space-y-2">
                     <input
                       type="text"
@@ -617,29 +531,24 @@ export default function AdminGallery() {
                       className="w-full px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-amber-400/50 placeholder-gray-500"
                       placeholder="Description"
                     />
-                    <select
-                      value={editFormData.category}
-                      onChange={(e) => setEditFormData({ ...editFormData, category: e.target.value })}
-                      className="w-full px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-amber-400/50"
-                    >
-                      <option value="surgery">🔬 Surgery</option>
-                      <option value="consultation">💊 Consultation</option>
-                      <option value="clinic">🏥 Clinic</option>
-                      <option value="team">👥 Team</option>
-                      <option value="events">🎪 Events</option>
-                      <option value="other">📌 Other</option>
-                    </select>
+                    <input
+                      type="text"
+                      value={editFormData.year}
+                      onChange={(e) => setEditFormData({ ...editFormData, year: e.target.value })}
+                      className="w-full px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-amber-400/50 placeholder-gray-500"
+                      placeholder="Year"
+                    />
                     <div className="flex gap-2 mt-2">
                       <button
-                        onClick={() => saveEdit(image._id)}
-                        className="flex-1 bg-green-500/80 hover:bg-green-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg flex items-center justify-center gap-1 transition-all"
+                        onClick={() => saveEdit(award._id)}
+                        className="flex-1 bg-green-400/80 hover:bg-green-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg flex items-center justify-center gap-1 transition-all"
                       >
                         <Save size={14} />
                         Save
                       </button>
                       <button
                         onClick={cancelEditing}
-                        className="flex-1 bg-gray-500/80 hover:bg-gray-600 text-white text-xs font-medium px-3 py-1.5 rounded-lg flex items-center justify-center gap-1 transition-all"
+                        className="flex-1 bg-gray-400/80 hover:bg-gray-500 text-white text-xs font-medium px-3 py-1.5 rounded-lg flex items-center justify-center gap-1 transition-all"
                       >
                         <Ban size={14} />
                         Cancel
@@ -647,32 +556,27 @@ export default function AdminGallery() {
                     </div>
                   </div>
                 ) : (
-                  // ✅ NORMAL VIEW
+                  // NORMAL VIEW
                   <>
-                    <h3 className="text-white font-semibold truncate text-lg">
-                      {image.title}
+                    <h3 className="text-white font-semibold text-lg line-clamp-2">
+                      {award.title}
                     </h3>
-                    {image.description && (
-                      <p className="text-gray-400 text-sm truncate mt-0.5">
-                        {image.description}
-                      </p>
-                    )}
-                    <p className="text-gray-500 text-xs mt-2">
-                      {new Date(image.createdAt).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      })}
+                    <p className="text-gray-400 text-sm line-clamp-2 mt-1">
+                      {award.description}
                     </p>
-
-                    {/* ✅ ONLY DELETE BUTTON - No Featured Toggle */}
-                    <div className="flex gap-2 mt-3">
+                    <p className="text-amber-400 text-xs mt-2 font-semibold">
+                      🏆 {award.year}
+                    </p>
+                    
+                    {/* ✅ BUTTONS - CARD FOOTER MEIN (Always Visible) */}
+                    <div className="flex gap-2 mt-3 pt-3 border-t border-white/10">
+                      {/* DELETE Button */}
                       <button
-                        onClick={() => handleDelete(image._id)}
-                        disabled={deletingId === image._id}
-                        className="w-full text-sm bg-red-500/10 text-red-400 px-3 py-1.5 rounded-lg hover:bg-red-500/20 transition-all flex items-center justify-center gap-1 disabled:opacity-50"
+                        onClick={() => handleDelete(award._id)}
+                        disabled={deletingId === award._id}
+                        className="flex-1 flex items-center justify-center gap-1.5 bg-red-400/70 hover:bg-red-500 text-white text-xs font-medium px-3 py-2 rounded-lg disabled:opacity-50 transition-all"
                       >
-                        {deletingId === image._id ? (
+                        {deletingId === award._id ? (
                           <Loader2 size={14} className="animate-spin" />
                         ) : (
                           <>
@@ -680,6 +584,15 @@ export default function AdminGallery() {
                             Delete
                           </>
                         )}
+                      </button>
+
+                      {/* EDIT Button */}
+                      <button
+                        onClick={() => startEditing(award)}
+                        className="flex-1 flex items-center justify-center gap-1.5 bg-blue-400/70 hover:bg-blue-500 text-white text-xs font-medium px-3 py-2 rounded-lg transition-all"
+                      >
+                        <Edit2 size={14} />
+                        Edit
                       </button>
                     </div>
                   </>
@@ -690,14 +603,14 @@ export default function AdminGallery() {
         </div>
       ) : (
         <div className="text-center py-20 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl">
-          <div className="text-6xl mb-4">🖼️</div>
-          <h3 className="text-xl font-semibold text-white">No images yet</h3>
-          <p className="text-gray-400 mt-2">Upload your first image to get started</p>
+          <div className="text-6xl mb-4">🏆</div>
+          <h3 className="text-xl font-semibold text-white">No awards yet</h3>
+          <p className="text-gray-400 mt-2">Add your first award to showcase achievements</p>
           <button
             onClick={() => setShowUploadForm(true)}
-            className="mt-4 px-6 py-2.5 bg-gradient-to-r from-amber-500/20 to-teal-500/20 border border-amber-400/20 rounded-lg text-amber-400 font-medium hover:from-amber-500/30 hover:to-teal-500/30 transition-all"
+            className="mt-4 px-6 py-2.5 bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border border-amber-400/20 rounded-lg text-amber-400 font-medium hover:from-amber-500/30 hover:to-yellow-500/30 transition-all"
           >
-            Upload Now
+            Add Award
           </button>
         </div>
       )}

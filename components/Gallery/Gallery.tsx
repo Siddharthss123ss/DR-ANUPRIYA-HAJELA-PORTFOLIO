@@ -45,11 +45,6 @@ const categoryLabels: Record<string, string> = {
   other: "Other",
 };
 
-const getHeightClass = (category: string, index: number) => {
-  const heights = ['large', 'medium', 'small'];
-  return heights[index % 3];
-};
-
 export default function Gallery() {
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -80,6 +75,14 @@ export default function Gallery() {
     fetchImages();
   }, []);
 
+  useEffect(() => {
+    if (images.length === 0) return;
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % images.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % images.length);
   };
@@ -88,7 +91,6 @@ export default function Gallery() {
     setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
   };
 
-  // Lightbox Modal
   const ImageLightbox = ({ image, onClose }: { image: GalleryImage; onClose: () => void }) => {
     useEffect(() => {
       const handleKeyDown = (e: KeyboardEvent) => {
@@ -204,13 +206,11 @@ export default function Gallery() {
     <>
       <section className="relative py-16 sm:py-20 lg:py-32 bg-gradient-to-b from-slate-50 via-teal-50/30 to-slate-50 overflow-hidden">
 
-        {/* GLOW EFFECTS */}
         <div className="absolute top-0 left-0 w-[800px] h-[800px] bg-teal-400/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-teal-400/10 rounded-full blur-3xl"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
 
-          {/* HEADER */}
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -239,7 +239,7 @@ export default function Gallery() {
             </p>
           </motion.div>
 
-          {/* ========== MOBILE SLIDER ========== */}
+          {/* MOBILE SLIDER */}
           <div className="lg:hidden mt-10">
             <div className="relative">
               <div className="overflow-hidden rounded-2xl">
@@ -250,18 +250,21 @@ export default function Gallery() {
                   {images.map((image) => (
                     <div 
                       key={image._id} 
-                      className="min-w-full relative aspect-[4/3]"
+                      className="min-w-full relative"
                       onClick={() => setSelectedImage(image)}
                     >
-                      <img
-                        src={image.imageUrl}
-                        alt={image.title}
-                        className="w-full h-full object-cover"
-                      />
+                      <div className="w-full h-[400px] sm:h-[450px] md:h-[500px] overflow-hidden">
+                        <img
+                          src={image.imageUrl}
+                          alt={image.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      
                       <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
                         <h3 className="text-white font-bold text-lg">{image.title}</h3>
                         {image.description && (
-                          <p className="text-white/70 text-sm">{image.description}</p>
+                          <p className="text-white/70 text-sm line-clamp-2">{image.description}</p>
                         )}
                         <div className="flex items-center gap-2 mt-1">
                           <span className="text-[10px] bg-teal-500/30 text-teal-200 px-2 py-0.5 rounded-full">
@@ -283,36 +286,40 @@ export default function Gallery() {
                 </div>
               </div>
 
-              {/* Navigation Arrows */}
-              <button
-                onClick={prevSlide}
-                className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/70 transition"
-              >
-                <ChevronLeft size={20} />
-              </button>
-              <button
-                onClick={nextSlide}
-                className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/70 transition"
-              >
-                <ChevronRight size={20} />
-              </button>
-
-              {/* Dots */}
-              <div className="flex justify-center gap-2 mt-4">
-                {images.map((_, idx) => (
+              {images.length > 1 && (
+                <>
                   <button
-                    key={idx}
-                    onClick={() => setCurrentSlide(idx)}
-                    className={`transition-all duration-300 rounded-full ${
-                      idx === currentSlide
-                        ? "w-6 h-2 bg-gradient-to-r from-teal-600 to-cyan-600"
-                        : "w-2 h-2 bg-teal-300/50 hover:bg-teal-400"
-                    }`}
-                  />
-                ))}
-              </div>
+                    onClick={prevSlide}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/70 transition"
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
+                  <button
+                    onClick={nextSlide}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black/70 transition"
+                  >
+                    <ChevronRight size={20} />
+                  </button>
+                </>
+              )}
 
-              {/* View Full Gallery Button - Mobile (Link to /gallery) */}
+              {images.length > 1 && (
+                <div className="flex justify-center gap-2 mt-4">
+                  {images.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentSlide(idx)}
+                      className={`transition-all duration-300 rounded-full ${
+                        idx === currentSlide
+                          ? "w-6 h-2 bg-gradient-to-r from-teal-600 to-cyan-600"
+                          : "w-2 h-2 bg-teal-300/50 hover:bg-teal-400"
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* ✅ BUTTON RAHEGA - Homepage se full page pe jaane ke liye */}
               <Link href="/gallery">
                 <button className="mt-4 w-full py-3 bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold rounded-xl shadow-lg shadow-teal-500/20 flex items-center justify-center gap-2">
                   <Camera size={18} />
@@ -322,11 +329,10 @@ export default function Gallery() {
             </div>
           </div>
 
-          {/* ========== DESKTOP GRID ========== */}
+          {/* DESKTOP GRID */}
           <div className="hidden lg:block">
-            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 mt-16 lg:mt-24 auto-rows-[250px] lg:auto-rows-[280px]">
+            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 mt-16 lg:mt-24 grid-rows-[280px_280px_280px_280px]">
               {images.map((item, index) => {
-                const heightClass = getHeightClass(item.category, index);
                 const badge = categoryBadges[item.category] || "Premium";
                 const categoryLabel = categoryLabels[item.category] || item.category;
 
@@ -343,14 +349,7 @@ export default function Gallery() {
                       damping: 25
                     }}
                     viewport={{ once: true }}
-                    className={`
-                      group relative overflow-hidden rounded-[32px] lg:rounded-[40px]
-                      shadow-[0_20px_80px_rgba(0,0,0,0.15)] hover:shadow-[0_40px_120px_rgba(13,148,136,0.2)]
-                      border border-slate-200/30 hover:border-teal-400/30
-                      transition-all duration-700 cursor-pointer
-                      ${heightClass === "large" ? "row-span-2" : ""}
-                      ${heightClass === "medium" ? "row-span-1" : ""}
-                    `}
+                    className="group relative overflow-hidden rounded-[32px] lg:rounded-[40px] shadow-[0_20px_80px_rgba(0,0,0,0.15)] hover:shadow-[0_40px_120px_rgba(13,148,136,0.2)] border border-slate-200/30 hover:border-teal-400/30 transition-all duration-700 cursor-pointer h-[280px]"
                     onClick={() => setSelectedImage(item)}
                   >
                     <img
@@ -397,11 +396,11 @@ export default function Gallery() {
                           {categoryLabel}
                         </span>
                         
-                        <h3 className="text-2xl lg:text-3xl font-black text-white leading-tight group-hover:text-teal-200 transition-colors duration-500">
+                        <h3 className="text-2xl lg:text-3xl font-black text-white leading-tight group-hover:text-teal-200 transition-colors duration-500 line-clamp-1">
                           {item.title}
                         </h3>
                         
-                        <p className="mt-2 text-sm lg:text-base text-gray-300/70 opacity-80 group-hover:opacity-100 transition-all duration-500 group-hover:text-gray-300">
+                        <p className="mt-2 text-sm lg:text-base text-gray-300/70 opacity-80 group-hover:opacity-100 transition-all duration-500 group-hover:text-gray-300 line-clamp-1">
                           {item.description || 'Premium ENT care experience'}
                         </p>
                       </div>
@@ -426,7 +425,7 @@ export default function Gallery() {
               })}
             </div>
 
-            {/* View Full Gallery Button - Desktop (Link to /gallery) */}
+            {/* ✅ BUTTON RAHEGA - Homepage se full page pe jaane ke liye */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -446,13 +445,14 @@ export default function Gallery() {
         </div>
       </section>
 
-      {/* LIGHTBOX MODAL */}
-      {selectedImage && (
-        <ImageLightbox 
-          image={selectedImage} 
-          onClose={() => setSelectedImage(null)} 
-        />
-      )}
+      <AnimatePresence>
+        {selectedImage && (
+          <ImageLightbox 
+            image={selectedImage} 
+            onClose={() => setSelectedImage(null)} 
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }

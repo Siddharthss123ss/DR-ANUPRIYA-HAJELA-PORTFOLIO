@@ -147,7 +147,7 @@ export default function Footer() {
                   <div>
                     <p className="text-gray-400 text-xs">24/7 Emergency</p>
                     <a href="tel:+917552773393" className="text-gray-900 font-semibold text-sm hover:text-red-500 transition-colors">
-                      +91 75527 73393
+                      +91 9575052525
                     </a>
                   </div>
                 </div>
@@ -160,7 +160,7 @@ export default function Footer() {
                   <div>
                     <p className="text-gray-400 text-xs">Email Address</p>
                     <a href="mailto:clinic@hajelahospital.com" className="text-gray-900 font-semibold text-sm hover:text-teal-600 transition-colors">
-                      clinic@hajelahospital.com
+                      hajelahospital@gmail.com
                     </a>
                   </div>
                 </div>

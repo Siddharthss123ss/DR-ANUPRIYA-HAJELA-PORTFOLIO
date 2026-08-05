@@ -74,7 +74,6 @@ const servicesData = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
-  // ✅ Sirf Mobile ke liye state
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const pathname = usePathname();
 
@@ -94,10 +93,9 @@ export default function Navbar() {
   const navLinks = [
     { name: "Home", link: "/", icon: "🏠" },
     { name: "About", link: "/about", icon: "👨‍⚕️" },
-    // ✅ Desktop pe normal link, Mobile pe dropdown ke liye hasDropdown true
     { name: "Services", link: "/services", icon: "🔬", hasDropdown: true },
     { name: "Awards", link: "/awards", icon: "🏆" },
-    { name: "Gallery", link: "/#gallery", icon: "📸" },
+    { name: "Gallery", link: "/gallery", icon: "📸" },
     { name: "Contact", link: "/contact", icon: "📱" },
   ];
 
@@ -155,7 +153,7 @@ export default function Navbar() {
                 <h1 className="text-xl sm:text-2xl font-black tracking-tight text-gray-900">
                   Dr. 
                   <span className="bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
-                    {" "}Anupriya
+                    {" "}Anupriya 
                   </span>
                 </h1>
                 <p className="text-[10px] sm:text-[11px] uppercase tracking-[2px] text-teal-700 font-semibold">
@@ -165,7 +163,7 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* DESKTOP NAV - Services ka dropdown nahi hai, sirf normal link */}
+          {/* DESKTOP NAV */}
           <nav className="hidden lg:flex items-center gap-8 xl:gap-10 relative z-10">
             {navLinks.map((item, idx) => (
               <Link
@@ -241,7 +239,7 @@ export default function Navbar() {
         </motion.div>
       </div>
 
-      {/* MOBILE MENU - Bilkul waise ka waisa, dropdown ke saath */}
+      {/* MOBILE MENU - Fixed with better overflow handling */}
       <AnimatePresence>
         {mobileMenu && (
           <motion.div
@@ -249,13 +247,13 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="lg:hidden px-4 sm:px-6 mt-3 overflow-hidden relative z-[99999]"
+            className="lg:hidden px-4 sm:px-6 mt-3 overflow-visible relative z-[99999]"
           >
-            <div className="relative overflow-hidden rounded-2xl bg-white/95 backdrop-blur-xl border border-teal-100 shadow-2xl">
+            <div className="relative overflow-visible rounded-2xl bg-white/95 backdrop-blur-xl border border-teal-100 shadow-2xl">
               <div className="absolute -top-20 -right-20 w-48 h-48 bg-gradient-to-bl from-teal-400/15 to-cyan-500/10 rounded-full blur-2xl" />
               <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-gradient-to-tr from-teal-400/10 to-cyan-300/10 rounded-full blur-2xl" />
 
-              <div className="relative z-10 p-6">
+              <div className="relative z-10 p-6 max-h-[80vh] overflow-y-auto">
                 <motion.div 
                   className="flex flex-col gap-2"
                   initial="hidden"
@@ -294,7 +292,7 @@ export default function Navbar() {
                             </span>
                             <ChevronDown
                               size={16}
-                              className={`transition-transform duration-300 ${
+                              className={`transition-transform duration-300 flex-shrink-0 ${
                                 mobileServicesOpen ? 'rotate-180' : ''
                               }`}
                             />
@@ -307,7 +305,7 @@ export default function Navbar() {
                                 animate={{ opacity: 1, height: "auto" }}
                                 exit={{ opacity: 0, height: 0 }}
                                 transition={{ duration: 0.3 }}
-                                className="ml-4 pl-4 border-l-2 border-teal-200 space-y-1 overflow-hidden"
+                                className="ml-2 sm:ml-4 pl-2 sm:pl-4 border-l-2 border-teal-200 space-y-1 overflow-visible"
                               >
                                 {servicesData.map((service) => {
                                   const Icon = service.icon;
@@ -321,11 +319,11 @@ export default function Navbar() {
                                       }}
                                       className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gradient-to-r hover:from-teal-50 hover:to-cyan-50 transition-all duration-300"
                                     >
-                                      <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
+                                      <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center flex-shrink-0">
                                         <Icon size={14} className="text-teal-600" />
                                       </div>
-                                      <div>
-                                        <p className="text-sm font-medium text-gray-700 hover:text-teal-700 transition-colors">
+                                      <div className="min-w-0 flex-1">
+                                        <p className="text-sm font-medium text-gray-700 hover:text-teal-700 transition-colors break-words">
                                           {service.name}
                                         </p>
                                       </div>
@@ -363,7 +361,7 @@ export default function Navbar() {
                           </span>
                           <ChevronRight
                             size={16}
-                            className={`transition-all duration-300 ${
+                            className={`transition-all duration-300 flex-shrink-0 ${
                               isActive(item.link) ? "opacity-100 translate-x-0" : "opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5"
                             }`}
                           />
@@ -384,7 +382,7 @@ export default function Navbar() {
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                   <Phone size={16} />
-                  <span>Call Clinic: +91 77778 02365</span>
+                  <span className="text-sm sm:text-base">Call Clinic: +91 77778 02365</span>
                 </motion.a>
 
                 <motion.div

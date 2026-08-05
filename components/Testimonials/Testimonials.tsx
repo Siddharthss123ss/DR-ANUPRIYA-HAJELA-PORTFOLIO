@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Counter from "@/components/Counter/Counter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Star,
@@ -137,12 +136,12 @@ const allPatientReviews = [
   },
 ];
 
+// ✅ STATS - Direct Numbers
 const stats = [
   {
     title: "Happy Patients",
     icon: Smile,
-    value: 5000,
-    suffix: "+",
+    value: "10,000+",
     color: "from-teal-500 to-cyan-500",
     borderColor: "border-teal-200",
     description: "Patients trust our care",
@@ -150,8 +149,7 @@ const stats = [
   {
     title: "Years of Excellence",
     icon: Calendar,
-    value: 15,
-    suffix: "+",
+    value: "12+",
     color: "from-teal-600 to-cyan-600",
     borderColor: "border-teal-200",
     description: "Experience you can trust",
@@ -159,8 +157,7 @@ const stats = [
   {
     title: "Success Rate",
     icon: TrendingUp,
-    value: 98,
-    suffix: "%",
+    value: "90%",
     color: "from-teal-500 to-cyan-500",
     borderColor: "border-teal-200",
     description: "Positive outcomes",
@@ -209,7 +206,7 @@ export default function Testimonials() {
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 relative z-10">
           
-          {/* ========== PREMIUM STATS CARDS ========== */}
+          {/* ========== STATS CARDS ========== */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-8 mb-12 sm:mb-16 md:mb-20 lg:mb-28">
             {stats.map((item, index) => (
               <motion.div
@@ -244,18 +241,20 @@ export default function Testimonials() {
                     <item.icon size={28} />
                   </motion.div>
                   
-                  {/* Counter - Big & Bold */}
+                  {/* ✅ Number - Dark Text */}
                   <div className="mt-3 sm:mt-4 md:mt-5">
-                    <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 group-hover:text-teal-600 transition-colors duration-300">
-                      <Counter end={item.value} suffix={item.suffix} />
+                    <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900">
+                      {item.value}
                     </div>
                   </div>
                   
-                  <p className="mt-1.5 sm:mt-2 text-sm sm:text-base font-bold text-gray-600 group-hover:text-gray-800 transition-colors duration-300">
+                  {/* ✅ Title - Dark Text */}
+                  <p className="mt-1.5 sm:mt-2 text-sm sm:text-base font-bold text-gray-800">
                     {item.title}
                   </p>
                   
-                  <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm text-gray-400 group-hover:text-gray-500 transition-colors duration-300">
+                  {/* ✅ Description - Dark Text */}
+                  <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm text-gray-500">
                     {item.description}
                   </p>
                   
@@ -321,7 +320,7 @@ export default function Testimonials() {
             </p>
           </motion.div>
 
-          {/* ========== PREMIUM TESTIMONIALS CAROUSEL ========== */}
+          {/* ========== TESTIMONIALS CAROUSEL ========== */}
           <div className="relative max-w-5xl mx-auto px-2 sm:px-4 md:px-6 lg:px-0">
             {/* Navigation Buttons */}
             <button

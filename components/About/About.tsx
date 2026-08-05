@@ -56,8 +56,8 @@ const expertise = [
 ];
 
 const stats = [
-  { value: "15+", label: "Years Experience", icon: Clock },
-  { value: "10K+", label: "Happy Patients", icon: Users },
+  { value: "12+", label: "Years Experience", icon: Clock },
+  { value: "20K+", label: "Happy Patients", icon: Users },
   { value: "500+", label: "Surgeries", icon: ShieldCheck },
   { value: "Gold", label: "Medalist", icon: Award },
 ];
