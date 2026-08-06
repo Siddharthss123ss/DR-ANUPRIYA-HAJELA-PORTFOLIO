@@ -14,6 +14,7 @@ import Cursor from "@/components/Cursor/Cursor";
 export default function Home() {
   return (
     <main className="bg-white overflow-hidden">
+      
 
       <Cursor />
      <Navbar />

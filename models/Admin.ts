@@ -33,11 +33,11 @@ const AdminSchema = new Schema<IAdmin>(
   }
 );
 
-// Hash password before saving
-AdminSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+// Hash password before saving (Mongoose 7/8 Compatible)
+AdminSchema.pre('save', async function () {
+  if (!this.isModified('password')) return;
+
   this.password = await bcrypt.hash(this.password, 10);
-  next();
 });
 
 // Compare password method
@@ -47,7 +47,9 @@ AdminSchema.methods.comparePassword = async function (
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-// Check if model exists before creating a new one
-const Admin = mongoose.models.Admin || mongoose.model<IAdmin>('Admin', AdminSchema);
+// Prevent model overwrite in Next.js
+const Admin =
+  mongoose.models.Admin ||
+  mongoose.model<IAdmin>('Admin', AdminSchema);
 
 export default Admin;

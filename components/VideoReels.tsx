@@ -20,7 +20,7 @@ import {
   Award,
 } from "lucide-react";
 
-// 📌 4 VIDEOS
+// 📌 4 VIDEOS - ✅ category property added
 const doctorVideos = [
   {
     id: 1,
@@ -29,30 +29,38 @@ const doctorVideos = [
     icon: Ear,
     videoUrl: "/videos/doc1.mp4",
     badge: "Latest Technique",
+    category: "Allergy", // ✅ ADDED
+    duration: "2:30",
   },
   {
     id: 2,
-    title: "OAE NEWBORN HEARIING ASSESSMENT",
+    title: "OAE NEWBORN HEARING ASSESSMENT",
+    desc: "Newborn hearing screening with advanced OAE technology",
     icon: Brain,
     videoUrl: "/videos/doc2.mp4",
-    duration: "3:15",
     badge: "Highly Effective",
+    category: "Hearing", // ✅ ADDED
+    duration: "3:15",
   },
   {
     id: 3,
     title: "Operation",
+    desc: "State-of-the-art ENT surgical procedure",
     icon: Stethoscope,
     videoUrl: "/videos/doc3.mp4",
-    duration: "1:45",
     badge: "State of Art",
+    category: "Surgery", // ✅ ADDED
+    duration: "1:45",
   },
   {
     id: 4,
     title: "Microscopic Ear Surgery",
+    desc: "Precision microsurgery for ear disorders",
     icon: Microscope,
     videoUrl: "/videos/micro.mp4",
-    duration: "4:00",
     badge: "Expert Care",
+    category: "Microsurgery", // ✅ ADDED
+    duration: "4:00",
   },
 ];
 
@@ -69,7 +77,7 @@ export default function VideoSlider() {
   const totalVideos = doctorVideos.length;
   const currentVideo = doctorVideos[currentIndex];
 
-  // ⏱️ VIDEO DURATION TRACK - Video jitni lambi utni chale
+  // ⏱️ VIDEO DURATION TRACK
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -103,59 +111,44 @@ export default function VideoSlider() {
     const video = videoRef.current;
     if (!video) return;
 
-    // Clear any existing timer
     if (slideTimerRef.current) {
       clearTimeout(slideTimerRef.current);
       slideTimerRef.current = null;
     }
 
     let elapsedTime = 0;
-    const MAX_DURATION = 15; // Maximum 15 seconds
+    const MAX_DURATION = 15;
 
     const checkVideo = () => {
       if (!video) return;
 
-      // Agar video duration available hai
       if (video.duration > 0) {
         const videoLen = video.duration;
-        
-        // 🔥 LOGIC: Video jitni lambi hai utni chale, lekin max 15 sec
         const playTime = Math.min(videoLen, MAX_DURATION);
         
         console.log(`📊 Video: ${videoLen}s, Playing: ${playTime}s`);
 
-        // Video end hone par ya max time hone par next pe jao
         const onTimeUpdate = () => {
           elapsedTime = video.currentTime;
           
-          // Agar video end ho gayi ya max time ho gaya
           if (video.ended || elapsedTime >= playTime) {
             console.log(`⏭️ Moving to next video at ${elapsedTime}s`);
-            
-            // Video ko pause karo
             video.pause();
-            
-            // Next video pe jao
             goToNext();
-            
-            // Event listener hatao
             video.removeEventListener('timeupdate', onTimeUpdate);
           }
         };
 
         video.addEventListener('timeupdate', onTimeUpdate);
 
-        // Cleanup function
         return () => {
           video.removeEventListener('timeupdate', onTimeUpdate);
         };
       } else {
-        // Agar video duration nahi mili toh 5 second baad check karo
         setTimeout(checkVideo, 1000);
       }
     };
 
-    // Start checking
     const timeoutId = setTimeout(checkVideo, 500);
     slideTimerRef.current = timeoutId;
 
@@ -250,7 +243,6 @@ export default function VideoSlider() {
 
   const IconComponent = currentVideo.icon;
   
-  // Display duration for badge
   const displayDuration = videoDuration > 0 ? Math.min(Math.round(videoDuration), 15) : 0;
 
   return (
@@ -329,7 +321,7 @@ export default function VideoSlider() {
                 <source src={currentVideo.videoUrl} type="video/mp4" />
               </video>
 
-              {/* ⏱️ Duration Badge - Shows actual play time */}
+              {/* ⏱️ Duration Badge */}
               <div className="absolute top-3 sm:top-4 left-1/2 -translate-x-1/2 z-20 bg-black/60 backdrop-blur-md rounded-full px-3 sm:px-4 py-1 sm:py-1.5 border border-teal-400/30">
                 <span className="text-[10px] sm:text-xs font-medium text-teal-300 flex items-center gap-1.5">
                   <Clock size={12} className="sm:w-3.5 sm:h-3.5" />
@@ -352,7 +344,7 @@ export default function VideoSlider() {
                 </span>
               </div>
 
-              {/* 🏷️ Category - Top Right */}
+              {/* 🏷️ Category - Top Right - ✅ NOW WORKS */}
               <div className="absolute top-3 sm:top-4 right-3 sm:right-4 z-20 bg-black/50 backdrop-blur-md rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 border border-white/10 flex items-center gap-1 sm:gap-1.5">
                 <IconComponent size={10} className="text-teal-400" />
                 <span className="text-[10px] sm:text-xs font-medium text-white">
@@ -439,7 +431,7 @@ export default function VideoSlider() {
                 <ChevronRight size={20} className="xl:w-6 xl:h-6 text-white" />
               </button>
 
-              {/* 📊 Video Progress Bar - Bottom */}
+              {/* 📊 Video Progress Bar */}
               <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-20">
                 <motion.div
                   className="h-full bg-gradient-to-r from-teal-400 to-cyan-400"
@@ -449,7 +441,7 @@ export default function VideoSlider() {
                 />
               </div>
 
-              {/* 📊 Slide Progress Bar - Bottom */}
+              {/* 📊 Slide Progress Bar */}
               <div className="absolute bottom-[4px] left-0 right-0 h-0.5 bg-white/5 z-20">
                 <motion.div
                   className="h-full bg-gradient-to-r from-teal-300 to-cyan-300"
