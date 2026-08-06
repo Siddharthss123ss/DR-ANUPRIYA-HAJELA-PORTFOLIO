@@ -51,6 +51,16 @@ export default function Gallery() {
   const [error, setError] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    setIsDesktop(window.innerWidth >= 1024);
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -76,12 +86,12 @@ export default function Gallery() {
   }, []);
 
   useEffect(() => {
-    if (images.length === 0) return;
+    if (images.length === 0 || !isDesktop) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % images.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [images.length]);
+  }, [images.length, isDesktop]);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % images.length);
@@ -206,8 +216,9 @@ export default function Gallery() {
     <>
       <section className="relative py-16 sm:py-20 lg:py-32 bg-gradient-to-b from-slate-50 via-teal-50/30 to-slate-50 overflow-hidden">
 
-        <div className="absolute top-0 left-0 w-[800px] h-[800px] bg-teal-400/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-teal-400/10 rounded-full blur-3xl"></div>
+        {/* ✅ Responsive Background Blur Circles */}
+        <div className="absolute top-0 left-0 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] lg:w-[800px] lg:h-[800px] bg-teal-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] lg:w-[800px] lg:h-[800px] bg-teal-400/10 rounded-full blur-3xl"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
 
@@ -239,7 +250,7 @@ export default function Gallery() {
             </p>
           </motion.div>
 
-          {/* MOBILE SLIDER */}
+          {/* ✅ MOBILE SLIDER - Improved Height */}
           <div className="lg:hidden mt-10">
             <div className="relative">
               <div className="overflow-hidden rounded-2xl">
@@ -253,7 +264,7 @@ export default function Gallery() {
                       className="min-w-full relative"
                       onClick={() => setSelectedImage(image)}
                     >
-                      <div className="w-full h-[400px] sm:h-[450px] md:h-[500px] overflow-hidden">
+                      <div className="relative w-full aspect-[4/5] sm:aspect-[4/5] md:aspect-[4/5] overflow-hidden">
                         <img
                           src={image.imageUrl}
                           alt={image.title}
@@ -319,7 +330,6 @@ export default function Gallery() {
                 </div>
               )}
 
-              {/* ✅ BUTTON RAHEGA - Homepage se full page pe jaane ke liye */}
               <Link href="/gallery">
                 <button className="mt-4 w-full py-3 bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold rounded-xl shadow-lg shadow-teal-500/20 flex items-center justify-center gap-2">
                   <Camera size={18} />
@@ -329,7 +339,7 @@ export default function Gallery() {
             </div>
           </div>
 
-          {/* DESKTOP GRID */}
+          {/* ✅ DESKTOP GRID */}
           <div className="hidden lg:block">
             <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 mt-16 lg:mt-24 grid-rows-[280px_280px_280px_280px]">
               {images.map((item, index) => {
@@ -425,7 +435,6 @@ export default function Gallery() {
               })}
             </div>
 
-            {/* ✅ BUTTON RAHEGA - Homepage se full page pe jaane ke liye */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}

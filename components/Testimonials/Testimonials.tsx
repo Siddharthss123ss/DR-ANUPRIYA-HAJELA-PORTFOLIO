@@ -141,7 +141,7 @@ const stats = [
   {
     title: "Happy Patients",
     icon: Smile,
-    value: "10,000+",
+    value: "20,000+",
     color: "from-teal-500 to-cyan-500",
     borderColor: "border-teal-200",
     description: "Patients trust our care",
@@ -169,24 +169,36 @@ export default function Testimonials() {
   const [autoplay, setAutoplay] = useState(true);
   const [showAllReviewsModal, setShowAllReviewsModal] = useState(false);
   const [expandedReview, setExpandedReview] = useState<number | null>(null);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    setIsDesktop(window.innerWidth >= 768);
+    
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
     setAutoplay(false);
-    setTimeout(() => setAutoplay(true), 5000);
+    setTimeout(() => setAutoplay(true), 7000);
   };
 
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
     setAutoplay(false);
-    setTimeout(() => setAutoplay(true), 5000);
+    setTimeout(() => setAutoplay(true), 7000);
   };
 
   useEffect(() => {
     if (!autoplay) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-    }, 4000);
+    }, 6000);
     return () => clearInterval(interval);
   }, [autoplay]);
 
@@ -200,9 +212,9 @@ export default function Testimonials() {
     <>
       <section className="relative py-12 sm:py-16 md:py-20 lg:py-28 xl:py-32 overflow-hidden bg-gradient-to-b from-white via-teal-50/30 to-white">
         
-        {/* Premium Light Glows */}
-        <div className="absolute top-0 left-0 w-[200px] sm:w-[300px] md:w-[400px] lg:w-[600px] h-[200px] sm:h-[300px] md:h-[400px] lg:h-[600px] bg-gradient-to-br from-teal-100/40 to-cyan-100/40 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-[200px] sm:w-[300px] md:w-[400px] lg:w-[600px] h-[200px] sm:h-[300px] md:h-[400px] lg:h-[600px] bg-gradient-to-tl from-teal-100/40 to-cyan-100/40 rounded-full blur-3xl"></div>
+        {/* ✅ Premium Light Glows - Hidden on Mobile */}
+        <div className="hidden md:block absolute top-0 left-0 w-[200px] sm:w-[300px] md:w-[400px] lg:w-[600px] h-[200px] sm:h-[300px] md:h-[400px] lg:h-[600px] bg-gradient-to-br from-teal-100/40 to-cyan-100/40 rounded-full blur-3xl"></div>
+        <div className="hidden md:block absolute bottom-0 right-0 w-[200px] sm:w-[300px] md:w-[400px] lg:w-[600px] h-[200px] sm:h-[300px] md:h-[400px] lg:h-[600px] bg-gradient-to-tl from-teal-100/40 to-cyan-100/40 rounded-full blur-3xl"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 relative z-10">
           
@@ -215,11 +227,15 @@ export default function Testimonials() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                whileHover={{ 
-                  y: -10, 
-                  scale: 1.03,
-                  transition: { duration: 0.3, ease: "easeOut" }
-                }}
+                whileHover={
+                  isDesktop
+                    ? {
+                        y: -10,
+                        scale: 1.03,
+                        transition: { duration: 0.3, ease: "easeOut" }
+                      }
+                    : {}
+                }
                 className={`group relative overflow-hidden bg-white rounded-2xl sm:rounded-3xl shadow-xl hover:shadow-2xl shadow-teal-500/10 border ${item.borderColor} transition-all duration-500 cursor-pointer`}
               >
                 {/* Animated Gradient Overlay */}
@@ -232,28 +248,32 @@ export default function Testimonials() {
                   {/* Icon */}
                   <motion.div 
                     className={`w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 mx-auto rounded-2xl bg-gradient-to-r ${item.color} flex items-center justify-center text-white shadow-lg shadow-teal-500/20`}
-                    whileHover={{ 
-                      scale: 1.15,
-                      rotate: [0, -5, 5, -5, 0],
-                      transition: { duration: 0.5 }
-                    }}
+                    whileHover={
+                      isDesktop
+                        ? {
+                            scale: 1.15,
+                            rotate: [0, -5, 5, -5, 0],
+                            transition: { duration: 0.5 }
+                          }
+                        : {}
+                    }
                   >
                     <item.icon size={28} />
                   </motion.div>
                   
-                  {/* ✅ Number - Dark Text */}
+                  {/* Number - Dark Text */}
                   <div className="mt-3 sm:mt-4 md:mt-5">
                     <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900">
                       {item.value}
                     </div>
                   </div>
                   
-                  {/* ✅ Title - Dark Text */}
+                  {/* Title - Dark Text */}
                   <p className="mt-1.5 sm:mt-2 text-sm sm:text-base font-bold text-gray-800">
                     {item.title}
                   </p>
                   
-                  {/* ✅ Description - Dark Text */}
+                  {/* Description - Dark Text */}
                   <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm text-gray-500">
                     {item.description}
                   </p>
@@ -262,19 +282,21 @@ export default function Testimonials() {
                   <motion.div 
                     className={`mt-4 sm:mt-5 md:mt-6 h-1.5 mx-auto bg-gradient-to-r ${item.color} rounded-full`}
                     initial={{ width: "2.5rem" }}
-                    whileHover={{ width: "5rem" }}
+                    whileHover={isDesktop ? { width: "5rem" } : {}}
                     transition={{ duration: 0.3, ease: "easeOut" }}
                   />
 
                   {/* Hover Arrow */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    whileHover={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4"
-                  >
-                    <ArrowRight size={18} className="text-teal-500" />
-                  </motion.div>
+                  {isDesktop && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      whileHover={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4"
+                    >
+                      <ArrowRight size={18} className="text-teal-500" />
+                    </motion.div>
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -337,13 +359,13 @@ export default function Testimonials() {
               <ChevronRight size={16} className="group-hover:text-white text-gray-600" />
             </button>
 
-            {/* Carousel Container */}
+            {/* ✅ Carousel Container - Lighter animation */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentIndex}
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -100 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5, type: "spring", stiffness: 300, damping: 30 }}
                 className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 lg:p-12 xl:p-14 shadow-2xl shadow-teal-500/10 border border-teal-100/50 relative overflow-hidden"
               >
@@ -400,7 +422,7 @@ export default function Testimonials() {
                   onClick={() => {
                     setCurrentIndex(idx);
                     setAutoplay(false);
-                    setTimeout(() => setAutoplay(true), 5000);
+                    setTimeout(() => setAutoplay(true), 7000);
                   }}
                   className={`transition-all duration-300 rounded-full ${
                     idx === currentIndex
@@ -422,7 +444,7 @@ export default function Testimonials() {
           >
             <motion.button
               onClick={() => setShowAllReviewsModal(true)}
-              whileHover={{ scale: 1.03 }}
+              whileHover={isDesktop ? { scale: 1.03 } : {}}
               whileTap={{ scale: 0.97 }}
               className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 rounded-full bg-gradient-to-r from-teal-50 to-cyan-50 border border-teal-100 hover:border-teal-300 hover:shadow-lg transition-all duration-300 group"
             >
@@ -436,7 +458,7 @@ export default function Testimonials() {
         </div>
       </section>
 
-      {/* ========== ALL REVIEWS MODAL ========== */}
+      {/* ========== ALL REVIEWS MODAL (No changes - Perfect) ========== */}
       <AnimatePresence>
         {showAllReviewsModal && (
           <motion.div
@@ -483,7 +505,7 @@ export default function Testimonials() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: review.id * 0.05 }}
-                      whileHover={{ y: -4 }}
+                      whileHover={isDesktop ? { y: -4 } : {}}
                       className="bg-gray-50 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-6 border border-gray-100 hover:border-teal-200 hover:shadow-md transition-all duration-300"
                     >
                       {/* Rating */}

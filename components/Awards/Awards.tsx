@@ -5,7 +5,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import Link from "next/link";
-import Head from "next/head";
+import Image from "next/image";
 import { 
   Sparkles, 
   Award, 
@@ -13,15 +13,13 @@ import {
   ArrowUpRight,
   Star,
   Medal,
-  TrendingUp,
   Users,
-  ShieldCheck,
   Crown,
   Gem,
   Zap,
   ChevronRight,
   Calendar,
-  MapPin
+  Loader2
 } from "lucide-react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -29,17 +27,41 @@ import "swiper/css/pagination";
 
 export default function Awards() {
   const [awards, setAwards] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    fetch("/api/awards")
-      .then((res) => res.json())
-      .then((data) => setAwards(data));
+    setIsDesktop(window.innerWidth >= 1024);
+    
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    // ✅ FIX: Fetch awards
+    fetchAwards();
+    
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // For 3D tilt effect on cards
+  const fetchAwards = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("/api/awards");
+      const data = await response.json();
+      setAwards(data);
+    } catch (error) {
+      console.error("Error fetching awards:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // For 3D tilt effect on cards - DESKTOP ONLY
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useSpring(useTransform(y, [-100, 100], [5, -5]), {
@@ -52,7 +74,7 @@ export default function Awards() {
   });
 
   const handleMouseMove = (e: React.MouseEvent, index: number) => {
-    if (hoveredIndex !== index) return;
+    if (!isDesktop || hoveredIndex !== index) return;
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
@@ -94,6 +116,18 @@ export default function Awards() {
     }
   };
 
+  // ✅ Loading State
+  if (loading) {
+    return (
+      <section className="min-h-[60vh] flex items-center justify-center bg-gradient-to-b from-slate-50 via-white to-slate-50/50">
+        <div className="text-center">
+          <Loader2 size={48} className="text-teal-600 animate-spin mx-auto" />
+          <p className="mt-4 text-gray-600">Loading awards...</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <>
       {/* ✅ SEO: JSON-LD Structured Data */}
@@ -102,27 +136,14 @@ export default function Awards() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      {/* ✅ SEO: Meta Tags */}
-      <Head>
-        <title>Awards & Achievements | Dr. Anupriya Hajela Shah - Hajela Hospital</title>
-        <meta name="description" content="Professional milestones, certifications and achievements earned through dedication and excellence in advanced ENT care. 12+ awards, 5+ gold medals, 15+ certifications." />
-        <meta name="keywords" content="ENT awards, ENT achievements, Dr. Anupriya Hajela Shah awards, Hajela Hospital awards, ENT specialist Bhopal, gold medalist ENT, ENT certifications" />
-        <meta property="og:title" content="Awards & Achievements | Dr. Anupriya Hajela Shah" />
-        <meta property="og:description" content="Professional milestones, certifications and achievements earned through dedication and excellence in advanced ENT care." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://hajelahospital.com/awards" />
-        <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://hajelahospital.com/awards" />
-      </Head>
-
       <section className="relative py-24 lg:py-32 bg-gradient-to-b from-slate-50 via-white to-slate-50/50 overflow-hidden">
 
-        {/* PREMIUM ANIMATED BACKGROUND */}
+        {/* ✅ PREMIUM ANIMATED BACKGROUND - HIDDEN ON MOBILE */}
         {mounted && (
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute -top-40 -right-40 w-96 h-96 bg-teal-200/20 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl animate-pulse delay-1000" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-violet-200/10 rounded-full blur-3xl animate-pulse delay-2000" />
+            <div className="hidden md:block absolute -top-40 -right-40 w-96 h-96 bg-teal-200/20 rounded-full blur-3xl animate-pulse" />
+            <div className="hidden md:block absolute -bottom-40 -left-40 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl animate-pulse delay-1000" />
+            <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-violet-200/10 rounded-full blur-3xl animate-pulse delay-2000" />
           </div>
         )}
 
@@ -134,7 +155,7 @@ export default function Awards() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-          {/* TOP SECTION - Premium */}
+          {/* TOP SECTION */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -142,42 +163,21 @@ export default function Awards() {
             viewport={{ once: true }}
             className="text-center max-w-4xl mx-auto mb-16 lg:mb-20"
           >
-            {/* Premium Badge with Animation */}
+            {/* Premium Badge */}
             <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-teal-50 to-cyan-50 border border-teal-100/50 shadow-sm">
-              <motion.div
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <Award size={16} className="text-teal-600" />
-              </motion.div>
+              <Award size={16} className="text-teal-600" />
               <span className="text-sm font-bold text-teal-700 tracking-wide">
                 Professional Recognition
               </span>
-              <motion.div
-                animate={{ rotate: [0, -10, 10, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <Sparkles size={14} className="text-teal-600" />
-              </motion.div>
+              <Sparkles size={14} className="text-teal-600" />
             </div>
 
-            {/* Premium Title with Animated Gradient */}
+            {/* Premium Title */}
             <h2 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight text-gray-900 mt-6">
               Awards &
-              <motion.span
-                className="block bg-gradient-to-r from-teal-600 via-cyan-600 to-violet-600 bg-clip-text text-transparent mt-1"
-                animate={{
-                  backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-                style={{ backgroundSize: "200% 200%" }}
-              >
+              <span className="block bg-gradient-to-r from-teal-600 via-cyan-600 to-violet-600 bg-clip-text text-transparent mt-1">
                 Achievements
-              </motion.span>
+              </span>
             </h2>
 
             <p className="mt-6 text-base lg:text-lg leading-relaxed text-gray-600 max-w-2xl mx-auto">
@@ -185,7 +185,7 @@ export default function Awards() {
               dedication and excellence in advanced ENT care.
             </p>
 
-            {/* Decorative Line with Glow */}
+            {/* Decorative Line */}
             <div className="flex justify-center mt-6">
               <div className="relative">
                 <div className="w-24 h-1 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full"></div>
@@ -227,178 +227,168 @@ export default function Awards() {
             </div>
           </motion.div>
 
-          {/* AWARDS SLIDER - Desktop Original Size */}
-          <Swiper
-            modules={[Autoplay, Navigation, Pagination]}
-            navigation
-            pagination={{
-              clickable: true,
-              dynamicBullets: true,
-            }}
-            autoplay={{
-              delay: 4000,
-              disableOnInteraction: false,
-              pauseOnMouseEnter: true,
-            }}
-            spaceBetween={30}
-            slidesPerView={1}
-            breakpoints={{
-              640: { slidesPerView: 1.2, spaceBetween: 24 },
-              768: { slidesPerView: 2, spaceBetween: 28 },
-              1024: { slidesPerView: 2.5, spaceBetween: 30 },
-              1280: { slidesPerView: 3, spaceBetween: 32 },
-            }}
-            className="awards-slider"
-          >
-            {awards.map((award: any, index: number) => (
-              <SwiperSlide key={award._id}>
-                <motion.div
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseMove={(e) => handleMouseMove(e, index)}
-                  onMouseLeave={handleMouseLeave}
-                  style={{
-                    rotateX: hoveredIndex === index ? rotateX : 0,
-                    rotateY: hoveredIndex === index ? rotateY : 0,
-                    transformStyle: "preserve-3d",
-                  }}
-                  className="h-full"
-                >
-                  <Link href={`/awards/${award.slug}`}>
-                    <div className="group relative h-full bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-teal-500/15 transition-all duration-500 cursor-pointer transform-gpu">
-
-                      {/* Premium Glow on Hover */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-teal-600/5 to-cyan-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 rounded-3xl"></div>
-
-                      {/* Image Section - DESKTOP ORIGINAL SIZE */}
-                      <div className="relative h-64 overflow-hidden flex-shrink-0">
-                        <motion.img
-                          src={award.image || "/Images/default-award.jpg"}
-                          alt={award.title}
-                          className="w-full h-full object-cover"
-                          whileHover={{ scale: 1.1 }}
-                          transition={{ duration: 0.7, ease: "easeOut" }}
-                          loading="lazy"
-                        />
-
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-
-                        {/* Premium Trophy Icon */}
-                        <motion.div 
-                          className="absolute top-4 right-4 z-20"
-                          whileHover={{ scale: 1.1, rotate: 10 }}
-                        >
-                          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 backdrop-blur-xl flex items-center justify-center text-3xl shadow-xl shadow-amber-500/30 border border-white/20">
-                            🏆
-                          </div>
-                        </motion.div>
-
-                        {/* Year Badge */}
-                        <motion.div 
-                          className="absolute bottom-4 left-4 z-20"
-                          whileHover={{ scale: 1.05 }}
-                        >
-                          <span className="px-4 py-2 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 text-white font-bold text-sm shadow-lg">
-                            <Calendar size={14} className="inline mr-1" />
-                            {award.year}
-                          </span>
-                        </motion.div>
-
-                        {/* Premium Category Tag */}
-                        <div className="absolute top-4 left-4 z-20">
-                          <span className="px-3 py-1.5 rounded-full bg-black/30 backdrop-blur-md border border-white/20 text-white text-xs font-semibold tracking-wide">
-                            <Medal size={12} className="inline mr-1 text-amber-400" />
-                            Achievement
-                          </span>
-                        </div>
-
-                        {/* Shimmer Effect */}
-                        <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent z-10"></div>
-                      </div>
-
-                      {/* Content Section - DESKTOP ORIGINAL SIZE */}
-                      <div className="p-7 lg:p-8 flex-grow flex flex-col">
-                        {/* Premium Badge */}
-                        <div className="flex items-center gap-2 mb-3">
-                          <motion.div
-                            animate={{ scale: [1, 1.2, 1] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                          >
-                            <Star size={14} className="text-amber-400 fill-amber-400" />
-                          </motion.div>
-                          <span className="text-xs font-semibold text-teal-600 uppercase tracking-wider">Recognition</span>
-                          <div className="flex-1" />
-                          <div className="w-6 h-6 rounded-full bg-teal-100 flex items-center justify-center text-teal-600">
-                            <Zap size={12} />
-                          </div>
-                        </div>
-
-                        <h3 className="text-2xl font-black text-gray-900 line-clamp-2 group-hover:text-teal-600 transition-colors duration-300">
-                          {award.title}
-                        </h3>
-
-                        <p className="text-gray-600 mt-4 leading-relaxed line-clamp-3 flex-grow">
-                          {award.description}
-                        </p>
-
-                        {/* Premium CTA */}
-                        <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
-                          <motion.div 
-                            className="flex items-center gap-2 text-teal-600 font-bold text-sm"
-                            whileHover={{ x: 5 }}
-                            transition={{ type: "spring", stiffness: 300 }}
-                          >
-                            <span>View Details</span>
-                            <ArrowUpRight size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" />
-                          </motion.div>
-                          <motion.div
-                            className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-teal-500/30"
-                            whileHover={{ scale: 1.1, rotate: 90 }}
-                            transition={{ type: "spring", stiffness: 300 }}
-                          >
-                            <ChevronRight size={16} />
-                          </motion.div>
-                        </div>
-
-                        {/* Animated Underline */}
-                        <div className="mt-4 h-0.5 w-0 bg-gradient-to-r from-teal-600 to-cyan-500 group-hover:w-full transition-all duration-700 rounded-full"></div>
-                      </div>
-
-                    </div>
-                  </Link>
-                </motion.div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-
-          {/* VIEW ALL BUTTON - Premium */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            viewport={{ once: true }}
-            className="flex justify-center mt-14 lg:mt-16"
-          >
-            <motion.a
-              href="/awards"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="group relative inline-flex items-center gap-3 px-10 py-5 rounded-2xl bg-gradient-to-r from-teal-600 via-cyan-600 to-violet-600 text-white font-black shadow-xl shadow-teal-500/25 hover:shadow-teal-500/40 transition-all duration-300 overflow-hidden"
+          {/* ✅ AWARDS SLIDER - Shows only if awards exist */}
+          {awards.length > 0 ? (
+            <Swiper
+              modules={[Autoplay, Navigation, Pagination]}
+              navigation
+              pagination={{
+                clickable: true,
+                dynamicBullets: true,
+              }}
+              autoplay={{
+                delay: 4000,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+              }}
+              spaceBetween={30}
+              slidesPerView={1}
+              breakpoints={{
+                640: { slidesPerView: 1.2, spaceBetween: 24 },
+                768: { slidesPerView: 2, spaceBetween: 28 },
+                1024: { slidesPerView: 2.5, spaceBetween: 30 },
+                1280: { slidesPerView: 3, spaceBetween: 32 },
+              }}
+              className="awards-slider"
             >
-              {/* Animated Shine */}
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
-              
-              {/* Glow Effect */}
-              <span className="absolute inset-0 bg-gradient-to-r from-teal-700 via-cyan-700 to-violet-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-              
-              <span className="relative flex items-center gap-3">
-                <Crown size={20} className="group-hover:rotate-12 transition-transform duration-300" />
-                View All Awards
-                <ArrowUpRight size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" />
-              </span>
-            </motion.a>
-          </motion.div>
+              {awards.map((award: any, index: number) => (
+                <SwiperSlide key={award._id}>
+                  <motion.div
+                    onMouseEnter={() => isDesktop && setHoveredIndex(index)}
+                    onMouseMove={(e) => handleMouseMove(e, index)}
+                    onMouseLeave={handleMouseLeave}
+                    style={{
+                      rotateX: isDesktop && hoveredIndex === index ? rotateX : 0,
+                      rotateY: isDesktop && hoveredIndex === index ? rotateY : 0,
+                      transformStyle: "preserve-3d",
+                    }}
+                    className="h-full"
+                  >
+                    <Link href={`/awards/${award.slug}`}>
+                      <div className="group relative h-full bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-lg md:hover:shadow-2xl md:hover:shadow-teal-500/15 transition-all duration-500 cursor-pointer">
 
-          {/* TRUST BADGE - Premium */}
+                        {/* Premium Glow on Hover */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-teal-600/5 to-cyan-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 rounded-3xl"></div>
+
+                        {/* Image Section - Using Next.js Image */}
+                        <div className="relative h-64 overflow-hidden flex-shrink-0">
+                          <Image
+                            src={award.image || "/Images/default-award.jpg"}
+                            alt={award.title}
+                            fill
+                            sizes="(max-width: 640px) 100vw, (max-width: 768px) 80vw, (max-width: 1024px) 50vw, 33vw"
+                            className="object-cover group-hover:scale-110 transition-transform duration-700"
+                            loading="lazy"
+                          />
+
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+
+                          {/* Premium Trophy Icon */}
+                          <div className="absolute top-4 right-4 z-20">
+                            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 backdrop-blur-xl flex items-center justify-center text-3xl shadow-xl shadow-amber-500/30 border border-white/20">
+                              🏆
+                            </div>
+                          </div>
+
+                          {/* Year Badge */}
+                          <div className="absolute bottom-4 left-4 z-20">
+                            <span className="px-4 py-2 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 text-white font-bold text-sm shadow-lg">
+                              <Calendar size={14} className="inline mr-1" />
+                              {award.year}
+                            </span>
+                          </div>
+
+                          {/* Premium Category Tag */}
+                          <div className="absolute top-4 left-4 z-20">
+                            <span className="px-3 py-1.5 rounded-full bg-black/30 backdrop-blur-md border border-white/20 text-white text-xs font-semibold tracking-wide">
+                              <Medal size={12} className="inline mr-1 text-amber-400" />
+                              Achievement
+                            </span>
+                          </div>
+
+                          {/* Shimmer Effect - Desktop only */}
+                          <div className="hidden md:block absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent z-10"></div>
+                        </div>
+
+                        {/* Content Section */}
+                        <div className="p-7 lg:p-8 flex-grow flex flex-col">
+                          {/* Premium Badge */}
+                          <div className="flex items-center gap-2 mb-3">
+                            <Star size={14} className="text-amber-400 fill-amber-400" />
+                            <span className="text-xs font-semibold text-teal-600 uppercase tracking-wider">Recognition</span>
+                            <div className="flex-1" />
+                            <div className="w-6 h-6 rounded-full bg-teal-100 flex items-center justify-center text-teal-600">
+                              <Zap size={12} />
+                            </div>
+                          </div>
+
+                          <h3 className="text-2xl font-black text-gray-900 line-clamp-2 group-hover:text-teal-600 transition-colors duration-300">
+                            {award.title}
+                          </h3>
+
+                          <p className="text-gray-600 mt-4 leading-relaxed line-clamp-3 flex-grow">
+                            {award.description}
+                          </p>
+
+                          {/* Premium CTA */}
+                          <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-teal-600 font-bold text-sm group-hover:translate-x-1 transition-transform duration-300">
+                              <span>View Details</span>
+                              <ArrowUpRight size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" />
+                            </div>
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-teal-500/30 group-hover:scale-110 group-hover:rotate-90 transition-all duration-300">
+                              <ChevronRight size={16} />
+                            </div>
+                          </div>
+
+                          {/* Animated Underline */}
+                          <div className="mt-4 h-0.5 w-0 bg-gradient-to-r from-teal-600 to-cyan-500 group-hover:w-full transition-all duration-700 rounded-full"></div>
+                        </div>
+
+                      </div>
+                    </Link>
+                  </motion.div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          ) : (
+            // ✅ Empty State
+            <div className="text-center py-16">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-100 mb-4">
+                <Award size={32} className="text-gray-400" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-700">No Awards Yet</h3>
+              <p className="text-gray-500 mt-2">Awards will be added soon.</p>
+            </div>
+          )}
+
+          {/* VIEW ALL BUTTON */}
+          {awards.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="flex justify-center mt-14 lg:mt-16"
+            >
+              <motion.a
+                href="/awards"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="group relative inline-flex items-center gap-3 px-10 py-5 rounded-2xl bg-gradient-to-r from-teal-600 via-cyan-600 to-violet-600 text-white font-black shadow-xl shadow-teal-500/25 hover:shadow-teal-500/40 transition-all duration-300 overflow-hidden"
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
+                <span className="absolute inset-0 bg-gradient-to-r from-teal-700 via-cyan-700 to-violet-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                <span className="relative flex items-center gap-3">
+                  <Crown size={20} className="group-hover:rotate-12 transition-transform duration-300" />
+                  View All Awards
+                  <ArrowUpRight size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" />
+                </span>
+              </motion.a>
+            </motion.div>
+          )}
+
+          {/* TRUST BADGE */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -407,27 +397,17 @@ export default function Awards() {
             className="text-center mt-16"
           >
             <div className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-teal-50/80 to-cyan-50/80 backdrop-blur-sm border border-teal-100/50 shadow-lg shadow-teal-500/5">
-              <motion.div
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              >
-                <Gem size={16} className="text-teal-600" />
-              </motion.div>
+              <Gem size={16} className="text-teal-600" />
               <span className="text-sm text-gray-700 font-semibold">
                 Recognized for excellence in ENT surgery & patient care
               </span>
-              <motion.div
-                animate={{ rotate: [0, -360] }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              >
-                <Gem size={16} className="text-teal-600" />
-              </motion.div>
+              <Gem size={16} className="text-teal-600" />
             </div>
           </motion.div>
 
         </div>
 
-        {/* CUSTOM SLIDER STYLES - Premium */}
+        {/* CUSTOM SLIDER STYLES */}
         <style jsx global>{`
           .awards-slider {
             padding-bottom: 4rem !important;

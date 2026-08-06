@@ -237,3 +237,12 @@ select:focus {
   border-radius: 999px;
   margin: 16px 0;
 }
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}

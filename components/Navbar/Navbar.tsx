@@ -81,7 +81,9 @@ export default function Navbar() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, {
+  passive: true,
+});
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -136,8 +138,8 @@ export default function Navbar() {
         >
           <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-teal-500/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
           
-          <div className="absolute -top-20 -right-20 w-56 h-56 bg-gradient-to-br from-teal-400/10 to-cyan-500/10 rounded-full blur-2xl" />
-          <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-gradient-to-tr from-teal-400/8 to-cyan-300/8 rounded-full blur-2xl" />
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-teal-400/10 to-cyan-500/10 rounded-full blur-2xl" />
+          <div className="absolute -bottom-24 -left-24 w-44 h-44 bg-gradient-to-tr from-teal-400/8 to-cyan-300/8 rounded-full blur-2xl" />
 
           {/* LEFT - Premium Logo */}
           <Link href="/" className="relative z-10 group">
@@ -209,7 +211,7 @@ export default function Navbar() {
               onClick={() => setMobileMenu(!mobileMenu)}
               className="lg:hidden flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md border border-teal-100 text-gray-900 hover:border-teal-300 transition-all duration-300"
               whileTap={{ scale: 0.92 }}
-              whileHover={{ scale: 1.05 }}
+             whileTap={{ scale: 0.92 }}
             >
               <AnimatePresence mode="wait">
                 {mobileMenu ? (
@@ -264,7 +266,7 @@ export default function Navbar() {
                     visible: {
                       opacity: 1,
                       transition: {
-                        staggerChildren: 0.05,
+                        staggerChildren: 0.03,
                         delayChildren: 0.1
                       }
                     }

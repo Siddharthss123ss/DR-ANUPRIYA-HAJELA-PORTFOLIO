@@ -17,17 +17,29 @@ import {
   Award,
   HeartPulse,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function Contact() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    setIsDesktop(window.innerWidth >= 1024);
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Real Google Maps Embed URL for Hajela Hospital
   const mapEmbedUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3665.123456789012!2d77.398987!3d23.234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x397c1234567890ab%3A0x1234567890abcdef!2sHajela%20Hospital!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin";
 
   return (
     <section className="relative overflow-hidden bg-white py-12 sm:py-16 md:py-20 lg:py-28 xl:py-32">
       
-      {/* PREMIUM BACKGROUND GLOWS */}
-      <div className="absolute top-0 left-0 w-[300px] sm:w-[400px] lg:w-[600px] h-[300px] sm:h-[400px] lg:h-[600px] bg-teal-100/20 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 right-0 w-[300px] sm:w-[400px] lg:w-[600px] h-[300px] sm:h-[400px] lg:h-[600px] bg-cyan-100/20 rounded-full blur-3xl"></div>
+      {/* ✅ PREMIUM BACKGROUND GLOWS - Hidden on Mobile */}
+      <div className="hidden lg:block absolute top-0 left-0 w-[300px] sm:w-[400px] lg:w-[600px] h-[300px] sm:h-[400px] lg:h-[600px] bg-teal-100/20 rounded-full blur-3xl"></div>
+      <div className="hidden lg:block absolute bottom-0 right-0 w-[300px] sm:w-[400px] lg:w-[600px] h-[300px] sm:h-[400px] lg:h-[600px] bg-cyan-100/20 rounded-full blur-3xl"></div>
       
       {/* Subtle Grid Pattern */}
       <div className="absolute inset-0 opacity-[0.03]" style={{
@@ -75,7 +87,11 @@ export default function Contact() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
             viewport={{ once: true }}
-            whileHover={{ y: -8, scale: 1.01 }}
+            whileHover={
+              isDesktop
+                ? { y: -8, scale: 1.01 }
+                : {}
+            }
             className="group relative bg-white rounded-3xl p-6 sm:p-8 border-2 border-teal-100 hover:border-teal-400 shadow-lg hover:shadow-2xl hover:shadow-teal-500/10 transition-all duration-500 overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-teal-500/5 to-cyan-500/5 rounded-full blur-2xl"></div>
@@ -99,7 +115,11 @@ export default function Contact() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
-            whileHover={{ y: -8, scale: 1.01 }}
+            whileHover={
+              isDesktop
+                ? { y: -8, scale: 1.01 }
+                : {}
+            }
             className="group relative bg-white rounded-3xl p-6 sm:p-8 border-2 border-teal-100 hover:border-teal-400 shadow-lg hover:shadow-2xl hover:shadow-teal-500/10 transition-all duration-500 overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-teal-500/5 to-cyan-500/5 rounded-full blur-2xl"></div>
@@ -122,7 +142,11 @@ export default function Contact() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
             viewport={{ once: true }}
-            whileHover={{ y: -8, scale: 1.01 }}
+            whileHover={
+              isDesktop
+                ? { y: -8, scale: 1.01 }
+                : {}
+            }
             className="group relative bg-white rounded-3xl p-6 sm:p-8 border-2 border-teal-100 hover:border-teal-400 shadow-lg hover:shadow-2xl hover:shadow-teal-500/10 transition-all duration-500 overflow-hidden sm:col-span-2 lg:col-span-1"
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-teal-500/5 to-cyan-500/5 rounded-full blur-2xl"></div>
@@ -167,7 +191,7 @@ export default function Contact() {
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                className="hover:scale-[1.02] transition-all duration-700"
+                className="w-full h-full"
                 title="Hajela Hospital Location Map"
               ></iframe>
             </div>
@@ -319,6 +343,7 @@ export default function Contact() {
             
             <div className="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t-2 border-gray-100">
               <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
+                {/* ✅ Only 1 pulse animation here */}
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
                 <p className="text-xs sm:text-sm text-gray-500 text-center font-medium">
                   Walk-ins welcome during OPD hours | Prior appointment recommended

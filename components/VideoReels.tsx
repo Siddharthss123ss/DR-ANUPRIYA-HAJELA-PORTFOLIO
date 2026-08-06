@@ -20,7 +20,7 @@ import {
   Award,
 } from "lucide-react";
 
-// 📌 4 VIDEOS - ✅ category property added
+// 📌 4 VIDEOS
 const doctorVideos = [
   {
     id: 1,
@@ -29,7 +29,7 @@ const doctorVideos = [
     icon: Ear,
     videoUrl: "/videos/doc1.mp4",
     badge: "Latest Technique",
-    category: "Allergy", // ✅ ADDED
+    category: "Allergy",
     duration: "2:30",
   },
   {
@@ -39,7 +39,7 @@ const doctorVideos = [
     icon: Brain,
     videoUrl: "/videos/doc2.mp4",
     badge: "Highly Effective",
-    category: "Hearing", // ✅ ADDED
+    category: "Hearing",
     duration: "3:15",
   },
   {
@@ -49,7 +49,7 @@ const doctorVideos = [
     icon: Stethoscope,
     videoUrl: "/videos/doc3.mp4",
     badge: "State of Art",
-    category: "Surgery", // ✅ ADDED
+    category: "Surgery",
     duration: "1:45",
   },
   {
@@ -59,7 +59,7 @@ const doctorVideos = [
     icon: Microscope,
     videoUrl: "/videos/micro.mp4",
     badge: "Expert Care",
-    category: "Microsurgery", // ✅ ADDED
+    category: "Microsurgery",
     duration: "4:00",
   },
 ];
@@ -71,11 +71,22 @@ export default function VideoSlider() {
   const [isHovering, setIsHovering] = useState(false);
   const [videoProgress, setVideoProgress] = useState(0);
   const [videoDuration, setVideoDuration] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const slideTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const totalVideos = doctorVideos.length;
+  // ✅ FIX: currentVideo define karo
   const currentVideo = doctorVideos[currentIndex];
+
+  // ✅ Desktop detection
+  useEffect(() => {
+    setIsDesktop(window.innerWidth >= 1024);
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // ⏱️ VIDEO DURATION TRACK
   useEffect(() => {
@@ -85,7 +96,6 @@ export default function VideoSlider() {
     const handleLoadedMetadata = () => {
       const duration = video.duration;
       setVideoDuration(duration);
-      console.log(`📹 Video duration: ${duration} seconds`);
     };
 
     const handleTimeUpdate = () => {
@@ -125,14 +135,11 @@ export default function VideoSlider() {
       if (video.duration > 0) {
         const videoLen = video.duration;
         const playTime = Math.min(videoLen, MAX_DURATION);
-        
-        console.log(`📊 Video: ${videoLen}s, Playing: ${playTime}s`);
 
         const onTimeUpdate = () => {
           elapsedTime = video.currentTime;
-          
+
           if (video.ended || elapsedTime >= playTime) {
-            console.log(`⏭️ Moving to next video at ${elapsedTime}s`);
             video.pause();
             goToNext();
             video.removeEventListener('timeupdate', onTimeUpdate);
@@ -190,7 +197,7 @@ export default function VideoSlider() {
       clearTimeout(slideTimerRef.current);
       slideTimerRef.current = null;
     }
-    setCurrentIndex((prev) => (prev + 1) % totalVideos);
+    setCurrentIndex((prev) => (prev + 1) % doctorVideos.length);
   };
 
   const goToPrev = () => {
@@ -198,7 +205,7 @@ export default function VideoSlider() {
       clearTimeout(slideTimerRef.current);
       slideTimerRef.current = null;
     }
-    setCurrentIndex((prev) => (prev - 1 + totalVideos) % totalVideos);
+    setCurrentIndex((prev) => (prev - 1 + doctorVideos.length) % doctorVideos.length);
   };
 
   const goToSlide = (index: number) => {
@@ -242,16 +249,14 @@ export default function VideoSlider() {
   };
 
   const IconComponent = currentVideo.icon;
-  
-  const displayDuration = videoDuration > 0 ? Math.min(Math.round(videoDuration), 15) : 0;
 
   return (
     <section className="relative py-12 sm:py-16 lg:py-24 bg-gradient-to-b from-slate-50 via-white to-slate-50/50 overflow-hidden">
-      {/* Background Decor */}
+      {/* ✅ Background Decor - Hidden on Mobile */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-64 sm:w-80 lg:w-96 h-64 sm:h-80 lg:h-96 bg-teal-200/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 sm:w-80 lg:w-96 h-64 sm:h-80 lg:h-96 bg-cyan-200/20 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[500px] lg:w-[600px] h-[400px] sm:h-[500px] lg:h-[600px] bg-violet-200/10 rounded-full blur-3xl" />
+        <div className="hidden lg:block absolute top-0 right-0 w-64 sm:w-80 lg:w-96 h-64 sm:h-80 lg:h-96 bg-teal-200/20 rounded-full blur-3xl" />
+        <div className="hidden lg:block absolute bottom-0 left-0 w-64 sm:w-80 lg:w-96 h-64 sm:h-80 lg:h-96 bg-cyan-200/20 rounded-full blur-3xl" />
+        <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[500px] lg:w-[600px] h-[400px] sm:h-[500px] lg:h-[600px] bg-violet-200/10 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -316,19 +321,20 @@ export default function VideoSlider() {
                 muted={isMuted}
                 playsInline
                 preload="metadata"
+                poster="/Images/video-poster.jpg"
                 className="w-full h-full object-cover"
               >
                 <source src={currentVideo.videoUrl} type="video/mp4" />
               </video>
 
-              {/* ⏱️ Duration Badge */}
+              {/* ⏱️ Duration Badge - Premium */}
               <div className="absolute top-3 sm:top-4 left-1/2 -translate-x-1/2 z-20 bg-black/60 backdrop-blur-md rounded-full px-3 sm:px-4 py-1 sm:py-1.5 border border-teal-400/30">
                 <span className="text-[10px] sm:text-xs font-medium text-teal-300 flex items-center gap-1.5">
                   <Clock size={12} className="sm:w-3.5 sm:h-3.5" />
                   {videoDuration > 0 ? (
-                    <>⏱️ {Math.min(Math.round(videoDuration), 15)}s / max 15s</>
+                    <>{Math.min(Math.round(videoDuration), 15)}s / 15s</>
                   ) : (
-                    <>⏱️ Loading...</>
+                    <>Loading...</>
                   )}
                 </span>
               </div>
@@ -340,13 +346,13 @@ export default function VideoSlider() {
               {/* 🔢 Slide Counter - Top Left */}
               <div className="absolute top-3 sm:top-4 left-3 sm:left-4 z-20 bg-black/50 backdrop-blur-md rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 border border-white/10">
                 <span className="text-[10px] sm:text-xs font-medium text-white">
-                  {currentIndex + 1} / {totalVideos}
+                  {currentIndex + 1} / {doctorVideos.length}
                 </span>
               </div>
 
-              {/* 🏷️ Category - Top Right - ✅ NOW WORKS */}
-              <div className="absolute top-3 sm:top-4 right-3 sm:right-4 z-20 bg-black/50 backdrop-blur-md rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 border border-white/10 flex items-center gap-1 sm:gap-1.5">
-                <IconComponent size={10} className="text-teal-400" />
+              {/* ✅ Category - Top Right - Premium Gradient */}
+              <div className="absolute top-3 sm:top-4 right-3 sm:right-4 z-20 bg-gradient-to-r from-teal-500 to-cyan-500 backdrop-blur-md rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 border border-white/20 flex items-center gap-1 sm:gap-1.5 shadow-lg shadow-teal-500/30">
+                <IconComponent size={10} className="text-white" />
                 <span className="text-[10px] sm:text-xs font-medium text-white">
                   {currentVideo.category}
                 </span>
@@ -356,16 +362,16 @@ export default function VideoSlider() {
               <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 lg:p-6 text-white z-10">
                 <div className="flex items-start justify-between gap-3 sm:gap-4">
                   <div className="flex-1 min-w-0">
-                    {/* Badge */}
-                    <div className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 bg-teal-500/20 backdrop-blur-sm rounded-full border border-teal-400/30 mb-1 sm:mb-1.5">
+                    {/* ✅ Badge - Premium Gradient */}
+                    <div className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 bg-gradient-to-r from-teal-500/30 to-cyan-500/30 backdrop-blur-sm rounded-full border border-teal-400/30 mb-1 sm:mb-1.5">
                       <Award size={8} className="text-teal-400" />
                       <span className="text-[8px] sm:text-[10px] font-medium text-teal-300 truncate">
                         {currentVideo.badge}
                       </span>
                     </div>
                     
-                    {/* Title */}
-                    <h3 className="text-xs sm:text-sm lg:text-lg xl:text-xl font-bold text-white leading-tight truncate">
+                    {/* Title - Mobile optimized */}
+                    <h3 className="text-sm sm:text-base lg:text-lg xl:text-xl font-bold text-white leading-tight truncate">
                       {currentVideo.title}
                     </h3>
                     
@@ -388,66 +394,60 @@ export default function VideoSlider() {
                     </div>
                   </div>
 
-                  {/* 🎮 Play/Pause Button */}
+                  {/* 🎮 Play/Pause Button - Glass Effect */}
                   <button
                     onClick={togglePlay}
-                    className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-300 hover:scale-110 active:scale-95"
+                    className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/10 backdrop-blur-xl border border-white/30 flex items-center justify-center hover:bg-white/20 transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg"
                   >
                     {isPlaying ? (
-                      <Pause size={16} className="sm:w-5 sm:h-5 text-white" />
+                      <Pause size={20} className="sm:w-6 sm:h-6 text-white" />
                     ) : (
-                      <Play size={16} className="sm:w-5 sm:h-5 text-white ml-0.5" />
+                      <Play size={20} className="sm:w-6 sm:h-6 text-white ml-0.5" />
                     )}
                   </button>
                 </div>
               </div>
 
-              {/* 🔇 Mute Button */}
+              {/* 🔇 Mute Button - Glass Effect */}
               <button
                 onClick={toggleMute}
-                className="absolute bottom-16 sm:bottom-20 lg:bottom-24 right-3 sm:right-4 z-20 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all duration-300"
+                className="absolute bottom-20 sm:bottom-24 lg:bottom-28 right-3 sm:right-4 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center hover:bg-white/20 transition-all duration-300 shadow-lg"
               >
                 {isMuted ? (
-                  <VolumeX size={14} className="sm:w-[18px] sm:h-[18px] text-white" />
+                  <VolumeX size={16} className="sm:w-5 sm:h-5 text-white" />
                 ) : (
-                  <Volume2 size={14} className="sm:w-[18px] sm:h-[18px] text-white" />
+                  <Volume2 size={16} className="sm:w-5 sm:h-5 text-white" />
                 )}
               </button>
 
-              {/* 👈👉 ARROW BUTTONS */}
-              <button
-                onClick={goToPrev}
-                className="hidden lg:flex absolute left-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 xl:w-12 xl:h-12 rounded-full bg-black/60 backdrop-blur-md border-2 border-white/30 items-center justify-center hover:bg-teal-500 hover:border-teal-400 transition-all duration-300 hover:scale-110 shadow-lg"
-                aria-label="Previous video"
-              >
-                <ChevronLeft size={20} className="xl:w-6 xl:h-6 text-white" />
-              </button>
+              {/* 👈👉 ARROW BUTTONS - Desktop only */}
+              {isDesktop && (
+                <>
+                  <button
+                    onClick={goToPrev}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-black/60 backdrop-blur-md border-2 border-white/30 flex items-center justify-center hover:bg-teal-500 hover:border-teal-400 transition-all duration-300 hover:scale-110 shadow-lg"
+                    aria-label="Previous video"
+                  >
+                    <ChevronLeft size={24} className="text-white" />
+                  </button>
 
-              <button
-                onClick={goToNext}
-                className="hidden lg:flex absolute right-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 xl:w-12 xl:h-12 rounded-full bg-black/60 backdrop-blur-md border-2 border-white/30 items-center justify-center hover:bg-teal-500 hover:border-teal-400 transition-all duration-300 hover:scale-110 shadow-lg"
-                aria-label="Next video"
-              >
-                <ChevronRight size={20} className="xl:w-6 xl:h-6 text-white" />
-              </button>
+                  <button
+                    onClick={goToNext}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-black/60 backdrop-blur-md border-2 border-white/30 flex items-center justify-center hover:bg-teal-500 hover:border-teal-400 transition-all duration-300 hover:scale-110 shadow-lg"
+                    aria-label="Next video"
+                  >
+                    <ChevronRight size={24} className="text-white" />
+                  </button>
+                </>
+              )}
 
-              {/* 📊 Video Progress Bar */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-20">
+              {/* 📊 Video Progress Bar - Only One */}
+              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-white/10 z-20">
                 <motion.div
                   className="h-full bg-gradient-to-r from-teal-400 to-cyan-400"
                   initial={{ width: "0%" }}
                   animate={{ width: `${videoProgress}%` }}
                   transition={{ duration: 0.3 }}
-                />
-              </div>
-
-              {/* 📊 Slide Progress Bar */}
-              <div className="absolute bottom-[4px] left-0 right-0 h-0.5 bg-white/5 z-20">
-                <motion.div
-                  className="h-full bg-gradient-to-r from-teal-300 to-cyan-300"
-                  initial={{ width: "0%" }}
-                  animate={{ width: `${((currentIndex + 1) / totalVideos) * 100}%` }}
-                  transition={{ duration: 0.5 }}
                 />
               </div>
             </div>
@@ -469,31 +469,31 @@ export default function VideoSlider() {
             ))}
           </div>
 
-          {/* 📌 Video Titles */}
+          {/* 📌 Video Titles - Mobile optimized */}
           <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mt-3 sm:mt-4 px-2">
             {doctorVideos.map((video, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`text-[9px] sm:text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded-full transition-all duration-300 ${
+                className={`text-[10px] sm:text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded-full transition-all duration-300 ${
                   index === currentIndex
                     ? "bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-medium shadow-lg shadow-teal-500/30"
                     : "bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"
                 }`}
               >
-                {video.title.length > 15 ? video.title.substring(0, 15) + "..." : video.title}
+                {video.title.length > 12 ? video.title.substring(0, 12) + "..." : video.title}
               </button>
             ))}
           </div>
 
-          {/* 📱 Swipe Hint */}
-          <p className="text-center text-[10px] sm:text-xs text-gray-400 mt-3 sm:mt-4 lg:hidden">
-            <span className="inline-flex items-center gap-1">
-              <ChevronLeft size={12} />
-              Swipe to browse
-              <ChevronRight size={12} />
-            </span>
-          </p>
+          {/* ✅ Swipe Hint - Premium Chip */}
+          <div className="flex justify-center mt-3 sm:mt-4 lg:hidden">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/80 backdrop-blur-sm rounded-full shadow-lg border border-gray-100/50">
+              <ChevronLeft size={14} className="text-teal-500" />
+              <span className="text-xs font-medium text-gray-600">Swipe Videos</span>
+              <ChevronRight size={14} className="text-teal-500" />
+            </div>
+          </div>
         </motion.div>
 
         {/* 🏆 Trust Badge */}

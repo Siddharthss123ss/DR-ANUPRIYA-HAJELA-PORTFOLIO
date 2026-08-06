@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Timeline from "@/components/Timeline/Timeline";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 
 import {
   Award,
@@ -24,7 +25,41 @@ import {
   TestTube,
 } from "lucide-react";
 
+// ✅ Lazy load Timeline
+const Timeline = dynamic(
+  () => import("@/components/Timeline/Timeline"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="py-12 sm:py-16 lg:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 text-center">
+          <div className="animate-pulse">
+            <div className="h-8 w-48 bg-gray-200 rounded mx-auto"></div>
+            <div className="h-4 w-64 bg-gray-200 rounded mx-auto mt-2"></div>
+            <div className="mt-8 space-y-4">
+              <div className="h-20 bg-gray-100 rounded-xl"></div>
+              <div className="h-20 bg-gray-100 rounded-xl"></div>
+              <div className="h-20 bg-gray-100 rounded-xl"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+);
+
 export default function AboutPage() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    setIsDesktop(window.innerWidth >= 1024);
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Expertise with unique icons for each
   const expertise = [
     { title: "Cochlear Implant", icon: Ear, color: "from-cyan-500 to-blue-500" },
@@ -61,9 +96,9 @@ export default function AboutPage() {
 
   // Hero stats with icons
   const achievements = [
-    { value: "15+", label: "Years Experience", icon: Briefcase },
-    { value: "5000+", label: "Happy Patients", icon: HeartPulse },
-    { value: "98%", label: "Success Rate", icon: Star },
+    { value: "12+", label: "Years Experience", icon: Briefcase },
+    { value: "20,000+", label: "Happy Patients", icon: HeartPulse },
+    { value: "90%", label: "Success Rate", icon: Star },
     { value: "24/7", label: "Emergency Care", icon: Activity },
   ];
 
@@ -80,23 +115,20 @@ export default function AboutPage() {
       {/* HERO - Premium With Background Image */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#06111f] to-[#0a1622] pt-20 pb-12 sm:pt-28 sm:pb-16 lg:pt-32 lg:pb-20">
         
-        {/* ✅ BACKGROUND IMAGE - PERFECT BLUR & SOLID */}
+        {/* ✅ BACKGROUND IMAGE - Mobile Optimized */}
         <div className="absolute inset-0">
-          {/* Background image - Halka sa blur */}
           <img
             src="/Images/anu3.jpeg"
             alt="Background"
-            className="w-full h-full object-cover object-top scale-105 blur-[2px] opacity-50"
+            className="w-full h-full object-cover object-top md:scale-105 md:blur-[2px] opacity-40"
           />
-          {/* Light dark overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#06111f]/70 via-[#0a1622]/60 to-[#06111f]/70" />
-          {/* Subtle gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/5 via-transparent to-blue-500/5" />
         </div>
 
-        {/* Animated background elements */}
-        <div className="absolute top-0 left-0 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-cyan-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-blue-500/10 rounded-full blur-3xl"></div>
+        {/* ✅ Animated background elements - Hidden on Mobile */}
+        <div className="hidden lg:block absolute top-0 left-0 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-cyan-500/10 rounded-full blur-3xl"></div>
+        <div className="hidden lg:block absolute bottom-0 right-0 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-blue-500/10 rounded-full blur-3xl"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
           <div className="grid lg:grid-cols-2 gap-6 sm:gap-10 lg:gap-12 items-center">
@@ -151,17 +183,16 @@ export default function AboutPage() {
               className="relative order-1 lg:order-2"
             >
               <div className="relative overflow-hidden rounded-2xl bg-white/10 border border-white/10 backdrop-blur-2xl p-1.5 sm:p-2 shadow-2xl max-w-[280px] sm:max-w-md mx-auto lg:max-w-full">
-                {/* Profile Image */}
                 <img
                   src="/Images/Anupriya.jpg"
                   alt="Dr. Anupriya Hajela Shah"
                   className="w-full h-[240px] sm:h-[350px] lg:h-[420px] xl:h-[480px] object-cover object-top rounded-xl"
                 />
                 
-                {/* Floating Badge */}
+                {/* ✅ Floating Badge - Slower animation */}
                 <motion.div
-                  animate={{ y: [0, -6, 0] }}
-                  transition={{ duration: 4, repeat: Infinity }}
+                  animate={isDesktop ? { y: [0, -6, 0] } : {}}
+                  transition={{ duration: 7, repeat: Infinity }}
                   className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 rounded-xl bg-black/50 backdrop-blur-2xl border border-white/10 p-2 sm:p-3"
                 >
                   <div className="flex items-center gap-2 sm:gap-3">
@@ -202,7 +233,7 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -4 }}
+                whileHover={isDesktop ? { y: -4 } : {}}
                 className="group flex items-center gap-3 sm:gap-4 rounded-xl bg-gradient-to-r from-gray-50 to-white border border-gray-100 p-3 sm:p-4 shadow-sm hover:shadow-md transition-all duration-300"
               >
                 <div className={`w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-r ${item.color} flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}>
@@ -217,7 +248,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* TIMELINE */}
+      {/* TIMELINE - Lazy Loaded */}
       <Timeline />
 
       {/* EXPERTISE */}
@@ -242,7 +273,7 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.04 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -5 }}
+                whileHover={isDesktop ? { y: -5 } : {}}
                 className="group rounded-xl bg-white border border-gray-100 p-3 sm:p-4 shadow-sm hover:shadow-lg transition-all duration-300"
               >
                 <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-r ${item.color} flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform duration-300`}>
@@ -279,6 +310,7 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
                 viewport={{ once: true }}
+                whileHover={isDesktop ? { y: -4 } : {}}
                 className="flex items-center gap-3 sm:gap-4 rounded-xl bg-gradient-to-r from-gray-50 to-white border border-gray-100 p-3 sm:p-4 shadow-sm hover:shadow-md transition-all duration-300 group"
               >
                 <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
@@ -316,7 +348,7 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -6, scale: 1.02 }}
+                whileHover={isDesktop ? { y: -6, scale: 1.02 } : {}}
                 className="group relative bg-white rounded-xl p-4 sm:p-5 shadow-lg hover:shadow-2xl transition-all duration-300 text-center border border-gray-100"
               >
                 <div className={`w-12 h-12 sm:w-14 sm:h-14 mx-auto rounded-xl bg-gradient-to-r ${item.color} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 mb-2 sm:mb-3`}>

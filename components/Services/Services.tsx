@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Head from "next/head";
+import Image from "next/image";
 import {
   Ear,
   Waves,
@@ -166,33 +166,20 @@ export default function ServicesPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      {/* ✅ SEO: Meta Tags */}
-      <Head>
-        <title>Advanced ENT Treatment Services | Dr. Anupriya Hajela Shah - Hajela Hospital</title>
-        <meta name="description" content="Comprehensive ENT care services including ear, nose, throat treatments with advanced surgical expertise. 15+ years experience, 10,000+ happy patients." />
-        <meta name="keywords" content="ENT services, ear treatment, nose treatment, throat treatment, ENT specialist Bhopal, Dr. Anupriya Hajela Shah, Hajela Hospital, ENT surgery, cochlear implant, sinus treatment" />
-        <meta property="og:title" content="Advanced ENT Treatment Services | Dr. Anupriya Hajela Shah" />
-        <meta property="og:description" content="Comprehensive ENT care with modern surgical expertise, advanced diagnostics, and compassionate patient-focused treatment." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://hajelahospital.com/services" />
-        <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://hajelahospital.com/services" />
-      </Head>
-
       <section
         id="services"
         className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-slate-50/50 py-20 lg:py-28"
         aria-label="ENT Treatment Services"
       >
-        {/* Premium Animated Background */}
+        {/* ✅ Premium Animated Background - Hidden on Mobile */}
         {mounted && (
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute -top-40 -right-40 w-96 h-96 bg-teal-200/20 rounded-full blur-3xl animate-pulse" />
-            <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl animate-pulse delay-1000" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-violet-200/10 rounded-full blur-3xl animate-pulse delay-2000" />
-            <div className="absolute top-20 left-10 w-2 h-2 bg-teal-400 rounded-full animate-ping" />
-            <div className="absolute top-40 right-20 w-3 h-3 bg-cyan-400 rounded-full animate-ping delay-300" />
-            <div className="absolute bottom-20 left-1/3 w-2.5 h-2.5 bg-violet-400 rounded-full animate-ping delay-700" />
+            <div className="hidden md:block absolute -top-40 -right-40 w-96 h-96 bg-teal-200/20 rounded-full blur-3xl animate-pulse" />
+            <div className="hidden md:block absolute -bottom-40 -left-40 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl animate-pulse delay-1000" />
+            <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-violet-200/10 rounded-full blur-3xl animate-pulse delay-2000" />
+            <div className="hidden md:block absolute top-20 left-10 w-2 h-2 bg-teal-400 rounded-full animate-ping" />
+            <div className="hidden md:block absolute top-40 right-20 w-3 h-3 bg-cyan-400 rounded-full animate-ping delay-300" />
+            <div className="hidden md:block absolute bottom-20 left-1/3 w-2.5 h-2.5 bg-violet-400 rounded-full animate-ping delay-700" />
           </div>
         )}
 
@@ -215,25 +202,16 @@ export default function ServicesPage() {
             className="text-center max-w-4xl mx-auto"
           >
             <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-50 to-cyan-50 border border-teal-100/50 px-5 py-2.5 shadow-sm">
-              <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-                <Award size={14} className="text-teal-600" />
-              </motion.div>
+              <Award size={14} className="text-teal-600" />
               <span className="text-sm font-bold text-teal-700 tracking-wide">Award-Winning ENT Care</span>
-              <motion.div animate={{ rotate: [0, -10, 10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-                <Sparkles size={14} className="text-teal-600" />
-              </motion.div>
+              <Sparkles size={14} className="text-teal-600" />
             </div>
 
             <h2 className="mt-6 text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tight">
               <span className="text-gray-900">Advanced ENT</span>
-              <motion.span
-                className="block bg-gradient-to-r from-teal-600 via-cyan-600 to-violet-600 bg-clip-text text-transparent mt-1"
-                animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-                style={{ backgroundSize: "200% 200%" }}
-              >
+              <span className="block bg-gradient-to-r from-teal-600 via-cyan-600 to-violet-600 bg-clip-text text-transparent mt-1">
                 Treatment Services
-              </motion.span>
+              </span>
             </h2>
 
             <p className="mt-6 max-w-2xl mx-auto text-base lg:text-lg leading-relaxed text-gray-600">
@@ -244,12 +222,12 @@ export default function ServicesPage() {
             <div className="mt-6 flex flex-wrap items-center justify-center gap-6">
               <div className="flex items-center gap-2">
                 <BadgeCheck size={16} className="text-teal-600" />
-                <span className="text-sm font-medium text-gray-700">15+ Years Experience</span>
+                <span className="text-sm font-medium text-gray-700">12+ Years Experience</span>
               </div>
               <div className="w-px h-4 bg-gray-300" />
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-sm font-medium text-gray-700">10,000+ Happy Patients</span>
+                <span className="text-sm font-medium text-gray-700">20,000+ Happy Patients</span>
               </div>
               <div className="w-px h-4 bg-gray-300" />
               <div className="flex items-center gap-2">
@@ -259,7 +237,7 @@ export default function ServicesPage() {
             </div>
           </motion.div>
 
-          {/* SERVICES SLIDER - Desktop Same, Mobile Responsive */}
+          {/* SERVICES SLIDER */}
           <div className="mt-16 lg:mt-20">
             <Swiper
               slidesPerView={1.1}
@@ -282,20 +260,18 @@ export default function ServicesPage() {
                 return (
                   <SwiperSlide key={item._id}>
                     <Link href={`/services/${item.slug}`}>
-                      <motion.div
-                        whileHover={{ y: -15, scale: 1.01 }}
-                        transition={{ duration: 0.4, type: "spring", stiffness: 300 }}
-                        className="group relative overflow-hidden rounded-3xl bg-white border border-gray-100 shadow-lg hover:shadow-2xl hover:shadow-teal-500/15 transition-all duration-500 h-full flex flex-col cursor-pointer"
-                      >
+                      <div className="group relative overflow-hidden rounded-3xl bg-white border border-gray-100 shadow-lg hover:shadow-2xl hover:shadow-teal-500/15 transition-all duration-500 h-full flex flex-col cursor-pointer md:hover:-translate-y-3">
                         {/* Gradient on hover */}
                         <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500 z-10 pointer-events-none rounded-3xl`} />
 
-                        {/* Image Section - DESKTOP SIZE */}
+                        {/* ✅ Image Section - Using Next.js Image */}
                         <div className="relative h-[280px] overflow-hidden flex-shrink-0">
-                          <img
+                          <Image
                             src={item.image}
                             alt={item.title}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            fill
+                            sizes="(max-width: 640px) 100vw, (max-width: 768px) 80vw, (max-width: 1024px) 50vw, 33vw"
+                            className="object-cover group-hover:scale-110 transition-transform duration-700"
                             loading="lazy"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
@@ -326,7 +302,7 @@ export default function ServicesPage() {
                           </div>
                         </div>
 
-                        {/* Content - DESKTOP SIZE */}
+                        {/* Content */}
                         <div className="p-6 lg:p-7 flex-grow flex flex-col">
                           <h3 className="text-xl lg:text-2xl font-black leading-tight text-gray-900 group-hover:text-teal-600 transition-colors duration-300 line-clamp-2">
                             {item.title}
@@ -344,7 +320,7 @@ export default function ServicesPage() {
                             </div>
                           </div>
                         </div>
-                      </motion.div>
+                      </div>
                     </Link>
                   </SwiperSlide>
                 );
@@ -355,11 +331,7 @@ export default function ServicesPage() {
           {/* CTA Button */}
           <div className="flex justify-center mt-12 lg:mt-16">
             <Link href="/services#services">
-              <motion.div
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-                className="group relative inline-flex items-center gap-3 rounded-2xl bg-gradient-to-r from-teal-600 via-cyan-600 to-violet-600 px-10 py-5 text-white font-black shadow-xl shadow-teal-500/30 hover:shadow-teal-500/50 transition-all duration-300 overflow-hidden cursor-pointer"
-              >
+              <div className="group relative inline-flex items-center gap-3 rounded-2xl bg-gradient-to-r from-teal-600 via-cyan-600 to-violet-600 px-10 py-5 text-white font-black shadow-xl shadow-teal-500/30 hover:shadow-teal-500/50 transition-all duration-300 overflow-hidden cursor-pointer">
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 <span className="absolute inset-0 bg-gradient-to-r from-teal-700 via-cyan-700 to-violet-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <span className="absolute -inset-0.5 bg-gradient-to-r from-teal-400 via-cyan-400 to-violet-400 rounded-2xl blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500" />
@@ -368,7 +340,7 @@ export default function ServicesPage() {
                   Explore Complete Services
                   <ArrowUpRight size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" />
                 </span>
-              </motion.div>
+              </div>
             </Link>
           </div>
         </div>
