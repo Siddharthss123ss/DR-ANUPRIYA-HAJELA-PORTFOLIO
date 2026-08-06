@@ -210,7 +210,7 @@ export default function Navbar() {
             <motion.button
               onClick={() => setMobileMenu(!mobileMenu)}
               className="lg:hidden flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md border border-teal-100 text-gray-900 hover:border-teal-300 transition-all duration-300"
-              whileTap={{ scale: 0.92 }}
+              
              whileTap={{ scale: 0.92 }}
             >
               <AnimatePresence mode="wait">
