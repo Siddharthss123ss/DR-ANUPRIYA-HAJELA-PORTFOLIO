@@ -45,8 +45,16 @@ export default function GalleryPage() {
       
       if (data.success) {
         setImages(data.data || []);
-        const uniqueCategories = [...new Set(data.data.map((img: GalleryImage) => img.category))];
-        setCategories(uniqueCategories);
+        // ✅ FIX: Type assertion to fix TypeScript error
+       const galleryImages = data.data as GalleryImage[];
+
+setImages(galleryImages);
+
+const uniqueCategories = Array.from(
+  new Set(galleryImages.map((img) => img.category))
+);
+
+setCategories(uniqueCategories);
       }
     } catch (error) {
       console.error('Error fetching images:', error);
@@ -179,7 +187,7 @@ export default function GalleryPage() {
                   onClick={() => setSelectedImage(image)}
                   className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-teal-500/20 hover:-translate-y-2 transition-all duration-500 cursor-pointer border border-gray-200"
                 >
-                  {/* ✅ FIX 1: Image Container with relative positioning */}
+                  {/* Image Container with relative positioning */}
                   <div className="relative w-full aspect-[4/3] bg-gray-100">
                     <Image
                       src={image.imageUrl}
@@ -188,6 +196,8 @@ export default function GalleryPage() {
                       sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                       className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                       priority={index < 4}
+                      loading={index < 4 ? "eager" : "lazy"}
+                      decoding="async"
                     />
                     
                     {/* Overlay on hover */}
@@ -274,7 +284,7 @@ export default function GalleryPage() {
               <X size={24} className="text-white" />
             </button>
 
-            {/* ✅ FIX 2: Modal Image Container */}
+            {/* Modal Image Container */}
             <div className="relative w-full bg-gray-900" style={{ height: '60vh', maxHeight: '600px' }}>
               <Image
                 src={selectedImage.imageUrl}
@@ -283,6 +293,8 @@ export default function GalleryPage() {
                 sizes="(max-width: 768px) 100vw, 80vw"
                 className="object-contain"
                 priority
+                loading="eager"
+                decoding="async"
               />
             </div>
 

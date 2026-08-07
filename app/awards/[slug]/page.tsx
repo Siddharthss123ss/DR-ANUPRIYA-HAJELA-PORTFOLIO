@@ -87,7 +87,7 @@ publisher: {
       <div className="max-w-5xl mx-auto px-6">
 
         <div className="overflow-hidden rounded-[40px] shadow-2xl">
-          <Image
+          <img
             src={award.image}
             alt={award.title}
             className="w-full h-[500px] object-cover"

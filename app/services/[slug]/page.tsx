@@ -306,7 +306,7 @@ export default function ServiceDetailPage() {
       {/* HERO SECTION */}
       <section className="relative overflow-hidden bg-gradient-to-r from-[#06111f] to-[#0a1622] pt-24 pb-16 lg:pt-32 lg:pb-20">
         <div className="absolute inset-0">
-          <Image
+          <img
             src={service.image}
             alt={service.title}
             className="w-full h-full object-cover opacity-20"
