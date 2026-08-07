@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from "framer-motion";
 import axios from 'axios';
+import Image from 'next/image';
 import { 
   Sparkles, 
   Camera, 
@@ -116,11 +117,15 @@ function ImageLightbox({
         className="relative w-full max-w-6xl max-h-[80vh]"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* ✅ FIX 1: Lightbox Image - Using fill with relative parent */}
         <div className="relative w-full h-[70vh] rounded-2xl overflow-hidden shadow-2xl bg-black/50">
-          <img
+          <Image
             src={currentImage.imageUrl}
             alt={currentImage.title}
-            className="w-full h-full object-contain"
+            fill
+            sizes="(max-width: 768px) 100vw, 80vw"
+            className="object-contain"
+            priority
           />
         </div>
 
@@ -315,7 +320,7 @@ export default function GalleryPage() {
           </motion.div>
 
           {/* ============================================ */}
-          {/* ✅ GALLERY GRID - ULTRA FIXED HEIGHT */}
+          {/* ✅ GALLERY GRID - FIXED WITH Next.js Image */}
           {/* ============================================ */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {images.map((image, index) => (
@@ -331,21 +336,19 @@ export default function GalleryPage() {
                 className="group relative overflow-hidden rounded-2xl bg-white/5 border border-white/5 hover:border-amber-400/30 transition-all duration-500 cursor-pointer hover:shadow-xl hover:shadow-amber-500/5"
                 onClick={() => openLightbox(index)}
               >
-                {/* ✅ ULTRA FIX: Fixed height with bg color */}
+                {/* ✅ FIX 2: Gallery Card - Using fill with relative parent */}
                 <div 
-                  className="relative w-full overflow-hidden bg-gray-800/50"
+                  className="relative w-full bg-gray-800/50 overflow-hidden"
                   style={{ height: '350px' }}
                 >
-                  <img
+                  <Image
                     src={image.imageUrl}
                     alt={image.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
-                      objectFit: 'cover',
-                      display: 'block'
-                    }}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                    loading="lazy"
+                    decoding="async"
                   />
                   
                   {/* Dark Overlay */}

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { connectDB } from "@/lib/mongodb";
 import Award from "@/models/Award";
+import Image from "next/image";
 import { 
   Trophy, 
   Award as AwardIcon, 
@@ -160,12 +161,17 @@ export default async function AwardsPage() {
               >
                 <div className="group bg-white rounded-3xl overflow-hidden border border-gray-200 shadow-lg hover:shadow-2xl hover:shadow-teal-500/30 hover:-translate-y-3 transition-all duration-500">
 
-                  {/* Image Section - Enhanced */}
+                  {/* Image Section - Enhanced with lazy loading */}
                   <div className="relative h-56 overflow-hidden">
-                    <img
+                    <Image
                       src={award.image || "/Images/default-award.jpg"}
                       alt={award.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700"
+                      fill
+                       quality={80}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-110 transition-all duration-700"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
 

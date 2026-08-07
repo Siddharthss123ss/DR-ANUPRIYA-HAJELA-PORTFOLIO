@@ -395,7 +395,7 @@ export default function AdminAwards() {
                   
                   {preview ? (
                     <div className="relative">
-                      <img
+                      <Image
                         src={preview}
                         alt="Preview"
                         className="mx-auto rounded-lg object-cover max-h-48"
@@ -501,7 +501,7 @@ export default function AdminAwards() {
             >
               {/* Image */}
               <div className="relative h-52 bg-gray-800/50 overflow-hidden">
-                <img
+                <Image
                   src={award.image}
                   alt={award.title}
                   className="w-full h-full object-cover"

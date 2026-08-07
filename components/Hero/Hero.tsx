@@ -31,7 +31,7 @@ export default function Hero() {
   />
   <source
     media="(min-width: 769px)"
-    src="/videos/Herovideo.mp4"
+    src="/videos/Herovideo1.mp4"
     type="video/mp4"
   />
 </video>

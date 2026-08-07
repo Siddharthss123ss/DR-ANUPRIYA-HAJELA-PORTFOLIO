@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 import {
   Award,
@@ -117,14 +118,18 @@ export default function AboutPage() {
         
         {/* ✅ BACKGROUND IMAGE - Mobile Optimized */}
         <div className="absolute inset-0">
-          <img
-            src="/Images/anu3.jpeg"
-            alt="Background"
-            className="w-full h-full object-cover object-top md:scale-105 md:blur-[2px] opacity-40"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#06111f]/70 via-[#0a1622]/60 to-[#06111f]/70" />
-          <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/5 via-transparent to-blue-500/5" />
-        </div>
+  <Image
+    src="/Images/anu3.jpeg"
+    alt="Background"
+    fill
+    priority
+    sizes="100vw"
+    className="object-cover object-top md:scale-105 md:blur-[2px] opacity-40"
+  />
+
+  <div className="absolute inset-0 bg-gradient-to-b from-[#06111f]/70 via-[#0a1622]/60 to-[#06111f]/70" />
+  <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/5 via-transparent to-blue-500/5" />
+</div>
 
         {/* ✅ Animated background elements - Hidden on Mobile */}
         <div className="hidden lg:block absolute top-0 left-0 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-cyan-500/10 rounded-full blur-3xl"></div>
@@ -183,11 +188,14 @@ export default function AboutPage() {
               className="relative order-1 lg:order-2"
             >
               <div className="relative overflow-hidden rounded-2xl bg-white/10 border border-white/10 backdrop-blur-2xl p-1.5 sm:p-2 shadow-2xl max-w-[280px] sm:max-w-md mx-auto lg:max-w-full">
-                <img
-                  src="/Images/Anupriya.jpg"
-                  alt="Dr. Anupriya Hajela Shah"
-                  className="w-full h-[240px] sm:h-[350px] lg:h-[420px] xl:h-[480px] object-cover object-top rounded-xl"
-                />
+                <Image
+  src="/Images/Anupriya.jpg"
+  alt="Dr. Anupriya Hajela Shah"
+  width={700}
+  height={900}
+  priority
+  className="w-full h-[240px] sm:h-[350px] lg:h-[420px] xl:h-[480px] object-cover object-top rounded-xl"
+/>
                 
                 {/* ✅ Floating Badge - Slower animation */}
                 <motion.div

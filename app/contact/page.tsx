@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image"; // ✅ Import added
 import {
   Phone,
   Clock,
@@ -121,10 +122,14 @@ export default function ContactPage() {
       {/* ========== HERO SECTION ========== */}
       <section className="relative overflow-hidden pt-20 sm:pt-24 lg:pt-28 pb-12 sm:pb-16 lg:pb-20 z-10">
         <div className="absolute inset-0">
-          <img
+          {/* ✅ FIX: Using Next.js Image with fill */}
+          <Image
             src="/Images/hos.jpeg"
             alt="Hajela Hospital Background"
-            className="w-full h-full object-cover object-center opacity-35 sm:opacity-40"
+            fill
+            sizes="100vw"
+            className="object-cover object-center opacity-35 sm:opacity-40"
+            priority
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#06111f]/80 via-[#0a1622]/75 to-[#06111f]/85" />
           <div className="absolute inset-0 bg-gradient-to-tr from-teal-500/20 via-transparent to-cyan-500/20" />
@@ -169,7 +174,7 @@ export default function ContactPage() {
               , and compassionate treatment in Bhopal
             </p>
 
-            {/* ✅ Contact Buttons - Stack on Mobile */}
+            {/* Contact Buttons - Stack on Mobile */}
             <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3 mt-4 sm:mt-6 px-4 sm:px-0">
               {[
                 { icon: Phone, label: "Call Now", href: "tel:+917777802365" },
@@ -198,7 +203,7 @@ export default function ContactPage() {
       <section className="pb-12 sm:pb-16 lg:pb-20 -mt-4 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          {/* ✅ CONTACT CARDS - Premium rounded-3xl */}
+          {/* CONTACT CARDS - Premium rounded-3xl */}
           <div className="grid md:grid-cols-2 gap-4 sm:gap-5 lg:gap-6">
             {contactCards.map((card, idx) => (
               <motion.div

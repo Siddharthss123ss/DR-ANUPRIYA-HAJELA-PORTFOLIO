@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   Phone, 
   Menu, 
@@ -9,9 +9,6 @@ import {
   ArrowUpRight, 
   Stethoscope, 
   Sparkles,
-  Shield,
-  Clock,
-  Star,
   Award,
   ChevronRight,
   ChevronDown,
@@ -25,7 +22,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// Services Data - Sirf Mobile ke liye
+// Services Data
 const servicesData = [
   { 
     id: 1, 
@@ -81,12 +78,11 @@ export default function Navbar() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
-    window.addEventListener("scroll", handleScroll, {
-  passive: true,
-});
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close menu on route change
   useEffect(() => {
     setMobileMenu(false);
     setMobileServicesOpen(false);
@@ -101,14 +97,8 @@ export default function Navbar() {
     { name: "Contact", link: "/contact", icon: "📱" },
   ];
 
-  const mobileItemVariants: Variants = {
-    hidden: { x: -20, opacity: 0 },
-    visible: { x: 0, opacity: 1 },
-  };
-
   const isActive = (link: string) => {
     if (link === "/") return pathname === "/";
-    if (link.startsWith("/#")) return pathname === "/";
     return pathname === link;
   };
 
@@ -117,10 +107,10 @@ export default function Navbar() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="fixed top-0 left-0 w-full z-[999]"
+      className="fixed top-0 left-0 w-full z-[998]"
     >
       <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
+        <div
           className={`
             relative overflow-visible
             rounded-full
@@ -133,15 +123,8 @@ export default function Navbar() {
                 : "bg-white/90 backdrop-blur-md border border-teal-50 shadow-lg py-2.5 px-5 sm:px-6"
             }
           `}
-          whileHover={{ boxShadow: "0 25px 40px -12px rgba(13, 148, 136, 0.15)" }}
-          transition={{ duration: 0.3 }}
         >
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-teal-500/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-          
-          <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-teal-400/10 to-cyan-500/10 rounded-full blur-2xl" />
-          <div className="absolute -bottom-24 -left-24 w-44 h-44 bg-gradient-to-tr from-teal-400/8 to-cyan-300/8 rounded-full blur-2xl" />
-
-          {/* LEFT - Premium Logo */}
+          {/* LEFT - Logo */}
           <Link href="/" className="relative z-10 group">
             <div className="flex items-center gap-2.5">
               <div className="relative">
@@ -188,7 +171,7 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* RIGHT - Call Button */}
+          {/* RIGHT - Call & Menu */}
           <div className="flex items-center gap-3 relative z-10">
             <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-400/20 to-amber-500/20 border border-amber-300/30">
               <Award size={12} className="text-amber-500" />
@@ -196,94 +179,51 @@ export default function Navbar() {
               <Sparkles size={10} className="text-amber-400" />
             </div>
 
-            <motion.a
+            <a
               href="tel:+917777802365"
-              className="hidden lg:flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-2.5 text-white font-semibold hover:from-teal-700 hover:to-cyan-700 transition-all duration-300 shadow-[0_10px_30px_rgba(13,148,136,0.15)] group"
-              whileHover={{ scale: 1.05, y: -1 }}
-              whileTap={{ scale: 0.98 }}
+              className="hidden lg:flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-2.5 text-white font-semibold hover:from-teal-700 hover:to-cyan-700 transition-all duration-300 shadow-[0_10px_30px_rgba(13,148,136,0.15)]"
             >
-              <Phone size={16} className="group-hover:rotate-12 transition-transform duration-300" />
+              <Phone size={16} />
               <span>Call Clinic</span>
-              <ArrowUpRight size={14} className="opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-0.5" />
-            </motion.a>
+              <ArrowUpRight size={14} />
+            </a>
 
-            <motion.button
-              onClick={() => setMobileMenu(!mobileMenu)}
+            {/* MOBILE MENU BUTTON - SIMPLE & WORKING */}
+            <button
+              onClick={() => setMobileMenu(prev => !prev)}
               className="lg:hidden flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-md border border-teal-100 text-gray-900 hover:border-teal-300 transition-all duration-300"
-              
-             whileTap={{ scale: 0.92 }}
+              aria-label={mobileMenu ? "Close menu" : "Open menu"}
             >
-              <AnimatePresence mode="wait">
-                {mobileMenu ? (
-                  <motion.div
-                    key="close"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <X size={18} />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="menu"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Menu size={18} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.button>
+              {mobileMenu ? <X size={20} /> : <Menu size={20} />}
+            </button>
           </div>
-        </motion.div>
+        </div>
       </div>
 
-      {/* MOBILE MENU - Fixed with better overflow handling */}
+      {/* MOBILE MENU */}
       <AnimatePresence>
         {mobileMenu && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="lg:hidden px-4 sm:px-6 mt-3 overflow-visible relative z-[99999]"
+            transition={{
+  duration: 0.22,
+  ease: "easeOut",
+}}
+            className="lg:hidden px-4 sm:px-6 mt-3 relative z-[99999]"
           >
-            <div className="relative overflow-visible rounded-2xl bg-white/95 backdrop-blur-xl border border-teal-100 shadow-2xl">
-              <div className="absolute -top-20 -right-20 w-48 h-48 bg-gradient-to-bl from-teal-400/15 to-cyan-500/10 rounded-full blur-2xl" />
-              <div className="absolute -bottom-20 -left-20 w-48 h-48 bg-gradient-to-tr from-teal-400/10 to-cyan-300/10 rounded-full blur-2xl" />
-
+            <div className="relative rounded-2xl bg-white/95 backdrop-blur-xl border border-teal-100 shadow-2xl">
               <div className="relative z-10 p-6 max-h-[80vh] overflow-y-auto">
-                <motion.div 
-                  className="flex flex-col gap-2"
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                  variants={{
-                    hidden: { opacity: 0 },
-                    visible: {
-                      opacity: 1,
-                      transition: {
-                        staggerChildren: 0.03,
-                        delayChildren: 0.1
-                      }
-                    }
-                  }}
-                >
+                <div className="flex flex-col gap-1">
                   {navLinks.map((item, idx) => (
-                    <motion.div
-                      key={idx}
-                      variants={mobileItemVariants}
-                      transition={{ duration: 0.3, type: "tween" }}
-                    >
+                    <div key={idx}>
                       {item.hasDropdown ? (
-                        <div>
+                        <>
                           <button
-                            onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
-                            className={`group flex items-center justify-between w-full py-3.5 px-3 rounded-xl text-base font-semibold transition-all duration-300 ${
-                              isActive(item.link) || mobileServicesOpen
+                            onClick={() => setMobileServicesOpen(prev => !prev)}
+                            className={`flex items-center justify-between w-full py-3.5 px-3 rounded-xl text-base font-semibold transition-all duration-300 ${
+                              mobileServicesOpen
                                 ? "text-teal-600 bg-gradient-to-r from-teal-50/80 to-cyan-50/80"
                                 : "text-gray-700 hover:text-teal-600 hover:bg-gradient-to-r hover:from-teal-50 hover:to-cyan-50"
                             }`}
@@ -294,7 +234,7 @@ export default function Navbar() {
                             </span>
                             <ChevronDown
                               size={16}
-                              className={`transition-transform duration-300 flex-shrink-0 ${
+                              className={`transition-transform duration-300 ${
                                 mobileServicesOpen ? 'rotate-180' : ''
                               }`}
                             />
@@ -306,8 +246,8 @@ export default function Navbar() {
                                 initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: "auto" }}
                                 exit={{ opacity: 0, height: 0 }}
-                                transition={{ duration: 0.3 }}
-                                className="ml-2 sm:ml-4 pl-2 sm:pl-4 border-l-2 border-teal-200 space-y-1 overflow-visible"
+                                transition={{ duration: 0.2 }}
+                                className="ml-4 pl-4 border-l-2 border-teal-200 space-y-1 overflow-hidden"
                               >
                                 {servicesData.map((service) => {
                                   const Icon = service.icon;
@@ -324,11 +264,9 @@ export default function Navbar() {
                                       <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center flex-shrink-0">
                                         <Icon size={14} className="text-teal-600" />
                                       </div>
-                                      <div className="min-w-0 flex-1">
-                                        <p className="text-sm font-medium text-gray-700 hover:text-teal-700 transition-colors break-words">
-                                          {service.name}
-                                        </p>
-                                      </div>
+                                      <span className="text-sm font-medium text-gray-700">
+                                        {service.name}
+                                      </span>
                                     </Link>
                                   );
                                 })}
@@ -338,7 +276,7 @@ export default function Navbar() {
                                     setMobileMenu(false);
                                     setMobileServicesOpen(false);
                                   }}
-                                  className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-teal-600 hover:text-teal-700 transition-colors"
+                                  className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-teal-600 hover:text-teal-700"
                                 >
                                   <span>View All Services</span>
                                   <ArrowUpRight size={14} />
@@ -346,12 +284,12 @@ export default function Navbar() {
                               </motion.div>
                             )}
                           </AnimatePresence>
-                        </div>
+                        </>
                       ) : (
                         <Link
                           href={item.link}
                           onClick={() => setMobileMenu(false)}
-                          className={`group flex items-center justify-between py-3.5 px-3 rounded-xl text-base font-semibold transition-all duration-300 ${
+                          className={`flex items-center justify-between py-3.5 px-3 rounded-xl text-base font-semibold transition-all duration-300 ${
                             isActive(item.link)
                               ? "text-teal-600 bg-gradient-to-r from-teal-50/80 to-cyan-50/80"
                               : "text-gray-700 hover:text-teal-600 hover:bg-gradient-to-r hover:from-teal-50 hover:to-cyan-50"
@@ -361,46 +299,27 @@ export default function Navbar() {
                             <span className="text-xl">{item.icon}</span>
                             {item.name}
                           </span>
-                          <ChevronRight
-                            size={16}
-                            className={`transition-all duration-300 flex-shrink-0 ${
-                              isActive(item.link) ? "opacity-100 translate-x-0" : "opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5"
-                            }`}
-                          />
+                          <ChevronRight size={16} className="opacity-0 group-hover:opacity-100" />
                         </Link>
                       )}
-                    </motion.div>
+                    </div>
                   ))}
-                </motion.div>
+                </div>
 
-                <motion.a
+                {/* Call Button Mobile */}
+                <a
                   href="tel:+917777802365"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3, duration: 0.3 }}
-                  className="relative z-10 mt-6 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-3.5 text-white font-semibold shadow-lg shadow-teal-500/20 overflow-hidden group"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  className="relative z-10 mt-6 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-5 py-3.5 text-white font-semibold shadow-lg shadow-teal-500/20"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                   <Phone size={16} />
                   <span className="text-sm sm:text-base">Call Clinic: +91 77778 02365</span>
-                </motion.a>
+                </a>
 
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4, duration: 0.3 }}
-                  className="mt-6 pt-4 border-t border-teal-100 text-center"
-                >
-                  <div className="flex items-center justify-center gap-2">
-                    <Sparkles size={12} className="text-teal-500" />
-                    <p className="text-[11px] text-teal-600 font-medium">
-                      24/7 Emergency Available
-                    </p>
-                    <Sparkles size={12} className="text-teal-500" />
-                  </div>
-                </motion.div>
+                <div className="mt-6 pt-4 border-t border-teal-100 text-center">
+                  <p className="text-[11px] text-teal-600 font-medium">
+                    ⚡ 24/7 Emergency Available
+                  </p>
+                </div>
               </div>
             </div>
           </motion.div>

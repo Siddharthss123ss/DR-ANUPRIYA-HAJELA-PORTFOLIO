@@ -321,7 +321,6 @@ export default function VideoSlider() {
                 muted={isMuted}
                 playsInline
                 preload="metadata"
-                poster="/Images/video-poster.jpg"
                 className="w-full h-full object-cover"
               >
                 <source src={currentVideo.videoUrl} type="video/mp4" />

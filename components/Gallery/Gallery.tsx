@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from "framer-motion";
 import axios from 'axios';
+import Image from "next/image";
 import { 
   Sparkles, 
   Camera, 
@@ -134,11 +135,13 @@ export default function Gallery() {
           </button>
 
           <div className="relative w-full h-[75vh] rounded-2xl overflow-hidden shadow-2xl bg-black/50">
-            <img
-              src={image.imageUrl}
-              alt={image.title}
-              className="w-full h-full object-contain"
-            />
+            <Image
+  src={image.imageUrl}
+  alt={image.title}
+  fill
+  sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw"
+  className="object-cover"
+/>
           </div>
 
           <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent rounded-b-2xl">
@@ -265,11 +268,13 @@ export default function Gallery() {
                       onClick={() => setSelectedImage(image)}
                     >
                       <div className="relative w-full aspect-[4/5] sm:aspect-[4/5] md:aspect-[4/5] overflow-hidden">
-                        <img
-                          src={image.imageUrl}
-                          alt={image.title}
-                          className="w-full h-full object-cover"
-                        />
+                      <Image
+  src={image.imageUrl}
+  alt={image.title}
+  fill
+  sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw"
+  className="object-cover"
+/>
                       </div>
                       
                       <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
@@ -362,11 +367,13 @@ export default function Gallery() {
                     className="group relative overflow-hidden rounded-[32px] lg:rounded-[40px] shadow-[0_20px_80px_rgba(0,0,0,0.15)] hover:shadow-[0_40px_120px_rgba(13,148,136,0.2)] border border-slate-200/30 hover:border-teal-400/30 transition-all duration-700 cursor-pointer h-[280px]"
                     onClick={() => setSelectedImage(item)}
                   >
-                    <img
-                      src={item.imageUrl}
-                      alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
-                    />
+                    <Image
+    src={item.imageUrl}
+    alt={item.title}
+    fill
+    sizes="(max-width:768px) 100vw, (max-width:1200px) 50vw, 33vw"
+    className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
+  />
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90 group-hover:opacity-70 transition-opacity duration-700"></div>
                     

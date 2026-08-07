@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
+import Image from "next/image"; // ✅ Import Next.js Image component
 import {
   Ear,
   Waves,
@@ -690,6 +691,11 @@ export default function ServicesPage() {
     }
   };
 
+  // ✅ Check if image is local (starts with /Images/) or from MongoDB
+  const isLocalImage = (src: string) => {
+    return src && src.startsWith('/Images/');
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
@@ -723,15 +729,17 @@ export default function ServicesPage() {
       {/* ========== HERO SECTION ========== */}
       <section className="relative overflow-hidden pt-36 pb-28 lg:pt-44 lg:pb-36 min-h-[700px] flex items-center">
         
-        <div 
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: "url('/Images/anu1.jpeg')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        ></div>
+        {/* ✅ Hero background using Next.js Image for local image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/Images/anu1.jpeg"
+            alt="Hero background"
+            fill
+            priority
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+        </div>
         
         <div className="absolute inset-0 z-[1] bg-white/40"></div>
         <div className="absolute inset-0 z-[1] bg-gradient-to-br from-teal-40/40 via-transparent to-cyan-50/30"></div>
@@ -843,11 +851,25 @@ export default function ServicesPage() {
                 >
                   <div className="relative h-48 bg-gradient-to-br from-teal-50/60 to-cyan-50/60 overflow-hidden">
                     {service.image && (
-                      <img
-                        src={service.image}
-                        alt={service.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
+                      isLocalImage(service.image) ? (
+                        // ✅ Local image - use Next.js Image
+                        <Image
+                          src={service.image}
+                          alt={service.title}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform duration-700"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                      ) : (
+                        // ✅ MongoDB/Cloudinary image - use img with lazy loading
+                        <img
+                          src={service.image}
+                          alt={service.title}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        />
+                      )
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
                     
@@ -1201,11 +1223,25 @@ export default function ServicesPage() {
               <div className="relative">
                 <div className="relative h-64 bg-gradient-to-r from-teal-600 to-cyan-600 overflow-hidden">
                   {selectedService.image && (
-                    <img
-                      src={selectedService.image}
-                      alt={selectedService.title}
-                      className="w-full h-full object-cover opacity-30"
-                    />
+                    isLocalImage(selectedService.image) ? (
+                      // ✅ Local image - use Next.js Image
+                      <Image
+                        src={selectedService.image}
+                        alt={selectedService.title}
+                        fill
+                        className="object-cover opacity-30"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                    ) : (
+                      // ✅ MongoDB/Cloudinary image - use img with lazy loading
+                      <img
+                        src={selectedService.image}
+                        alt={selectedService.title}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover opacity-30"
+                      />
+                    )
                   )}
                   <div className="absolute inset-0 bg-black/20"></div>
                   <div className="absolute inset-0 flex items-center justify-center">
