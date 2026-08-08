@@ -141,7 +141,7 @@ const stats = [
   {
     title: "Happy Patients",
     icon: Smile,
-    value: "20,000+",
+    value: "10,000+",
     color: "from-teal-500 to-cyan-500",
     borderColor: "border-teal-200",
     description: "Patients trust our care",
@@ -149,7 +149,7 @@ const stats = [
   {
     title: "Years of Excellence",
     icon: Calendar,
-    value: "12+",
+    value: "10+",
     color: "from-teal-600 to-cyan-600",
     borderColor: "border-teal-200",
     description: "Experience you can trust",

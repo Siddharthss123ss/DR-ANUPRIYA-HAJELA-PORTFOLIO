@@ -97,8 +97,8 @@ export default function AboutPage() {
 
   // Hero stats with icons
   const achievements = [
-    { value: "12+", label: "Years Experience", icon: Briefcase },
-    { value: "20,000+", label: "Happy Patients", icon: HeartPulse },
+    { value: "10+", label: "Years Experience", icon: Briefcase },
+    { value: "10,000+", label: "Happy Patients", icon: HeartPulse },
     { value: "90%", label: "Success Rate", icon: Star },
     { value: "24/7", label: "Emergency Care", icon: Activity },
   ];

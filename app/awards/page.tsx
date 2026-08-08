@@ -35,9 +35,9 @@ export default async function AwardsPage() {
 
   // Stats
   const stats = [
-    { icon: Trophy, value: "15+", label: "Awards & Honors", color: "from-amber-400 to-orange-500" },
+    { icon: Trophy, value: "10+", label: "Awards & Honors", color: "from-amber-400 to-orange-500" },
     { icon: Medal, value: "Gold", label: "MS Gold Medalist", color: "from-yellow-400 to-amber-500" },
-    { icon: TrendingUp, value: "98%", label: "Success Rate", color: "from-emerald-400 to-teal-500" },
+    { icon: TrendingUp, value: "90%", label: "Success Rate", color: "from-emerald-400 to-teal-500" },
     { icon: Users, value: "5000+", label: "Happy Patients", color: "from-blue-400 to-cyan-500" },
   ];
 
@@ -269,9 +269,9 @@ export default async function AwardsPage() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: ShieldCheck, title: "Trusted Expertise", desc: "15+ years of experience in ENT care" },
+              { icon: ShieldCheck, title: "Trusted Expertise", desc: "10+ years of experience in ENT care" },
               { icon: Heart, title: "Compassionate Care", desc: "Patient-first approach with empathy" },
-              { icon: CheckCircle, title: "Proven Results", desc: "98% success rate in treatments" },
+              { icon: CheckCircle, title: "Proven Results", desc: "90% success rate in treatments" },
               { icon: Users, title: "Happy Patients", desc: "5000+ satisfied patients worldwide" }
             ].map((item, index) => (
               <div key={index} className="group bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 text-center hover:bg-white/10 hover:border-amber-400/20 transition-all duration-500 hover:-translate-y-2">

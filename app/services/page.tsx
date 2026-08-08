@@ -798,7 +798,7 @@ export default function ServicesPage() {
               {[
                 { icon: Award, label: "Experience", value: "20+ Years" },
                 { icon: Users, label: "Happy Patients", value: "50,000+" },
-                { icon: Star, label: "Success Rate", value: "98%" },
+                { icon: Star, label: "Success Rate", value: "90%" },
                 { icon: Heart, label: "Satisfaction", value: "4.9/5" },
               ].map((stat, idx) => (
                 <motion.div

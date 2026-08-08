@@ -222,12 +222,12 @@ export default function ServicesPage() {
             <div className="mt-6 flex flex-wrap items-center justify-center gap-6">
               <div className="flex items-center gap-2">
                 <BadgeCheck size={16} className="text-teal-600" />
-                <span className="text-sm font-medium text-gray-700">12+ Years Experience</span>
+                <span className="text-sm font-medium text-gray-700">10+ Years Experience</span>
               </div>
               <div className="w-px h-4 bg-gray-300" />
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-sm font-medium text-gray-700">20,000+ Happy Patients</span>
+                <span className="text-sm font-medium text-gray-700">10,000+ Happy Patients</span>
               </div>
               <div className="w-px h-4 bg-gray-300" />
               <div className="flex items-center gap-2">

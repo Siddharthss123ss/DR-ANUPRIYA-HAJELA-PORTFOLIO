@@ -200,7 +200,7 @@ export default function Awards() {
                   <Trophy size={18} />
                 </div>
                 <div className="text-left">
-                  <p className="text-sm font-black text-gray-900">12+</p>
+                  <p className="text-sm font-black text-gray-900">10+</p>
                   <p className="text-xs text-gray-500">Awards Won</p>
                 </div>
               </div>
@@ -220,7 +220,7 @@ export default function Awards() {
                   <Users size={18} />
                 </div>
                 <div className="text-left">
-                  <p className="text-sm font-black text-gray-900">15+</p>
+                  <p className="text-sm font-black text-gray-900">10+</p>
                   <p className="text-xs text-gray-500">Certifications</p>
                 </div>
               </div>

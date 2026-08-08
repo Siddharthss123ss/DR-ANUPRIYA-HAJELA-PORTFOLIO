@@ -61,7 +61,7 @@ export default function Hero() {
                 <Award size={24} className="sm:size-[28px] md:size-[34px]" />
               </div>
               <div>
-                <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-black text-slate-900">12+ Years</h3>
+                <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-black text-slate-900">10+ Years</h3>
                 <p className="mt-0.5 sm:mt-1 md:mt-2 text-xs sm:text-sm text-slate-500 leading-relaxed">Extensive clinical experience in patient care.</p>
               </div>
             </div>
@@ -72,7 +72,7 @@ export default function Hero() {
                 <Users size={24} className="sm:size-[28px] md:size-[34px]" />
               </div>
               <div>
-                <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-black text-slate-900">20,000+ Patients</h3>
+                <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-black text-slate-900">10,000+ Patients</h3>
                 <p className="mt-0.5 sm:mt-1 md:mt-2 text-xs sm:text-sm text-slate-500 leading-relaxed">Trusted by thousands for honest medical advice.</p>
               </div>
             </div>

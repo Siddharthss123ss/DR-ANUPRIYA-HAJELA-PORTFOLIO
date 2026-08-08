@@ -8,48 +8,52 @@ import {
 
 export default function MobileBar() {
   return (
-    <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-[999] w-[92%] md:hidden">
-
-      <div className="bg-white/80 backdrop-blur-2xl border border-white shadow-[0_15px_50px_rgba(0,0,0,0.15)] rounded-3xl px-4 py-4">
-
-        <div className="grid grid-cols-3 gap-3">
+    <div className="fixed bottom-0 left-0 right-0 z-[9999] md:hidden px-3 pb-[calc(env(safe-area-inset-bottom)+12px)]">
+      
+      <div className="bg-white/90 backdrop-blur-2xl border border-white/80 shadow-[0_-10px_40px_rgba(0,0,0,0.12)] rounded-3xl p-3">
+        
+        <div className="grid grid-cols-3 gap-2.5">
 
           {/* CALL */}
           <a
-            href="tel:+919876543210"
-            className="flex flex-col items-center justify-center gap-2 bg-gradient-to-r from-blue-700 to-cyan-500 text-white rounded-2xl py-4 shadow-xl"
+            href="tel:+917777802365"
+            aria-label="Call Dr. Anupriya Hajela Shah"
+            className="flex min-h-[68px] flex-col items-center justify-center gap-1.5 bg-gradient-to-r from-blue-700 to-cyan-500 text-white rounded-2xl shadow-lg active:scale-[0.97] transition-transform duration-150"
           >
+            <Phone size={21} strokeWidth={2.2} />
 
-            <Phone size={22} />
-
-            <span className="text-sm font-semibold">
+            <span className="text-xs font-semibold">
               Call
             </span>
           </a>
 
           {/* WHATSAPP */}
           <a
-            href="https://wa.me/919876543210"
+            href="https://wa.me/917777802365"
             target="_blank"
-            className="flex flex-col items-center justify-center gap-2 bg-[#25D366] text-white rounded-2xl py-4 shadow-xl"
+            rel="noopener noreferrer"
+            aria-label="Contact on WhatsApp"
+            className="flex min-h-[68px] flex-col items-center justify-center gap-1.5 bg-[#25D366] text-white rounded-2xl shadow-lg active:scale-[0.97] transition-transform duration-150"
           >
+            <MessageCircle size={21} strokeWidth={2.2} />
 
-            <MessageCircle size={22} />
-
-            <span className="text-sm font-semibold">
+            <span className="text-xs font-semibold">
               WhatsApp
             </span>
           </a>
 
-          {/* APPOINTMENT */}
-          <button className="flex flex-col items-center justify-center gap-2 bg-black text-white rounded-2xl py-4 shadow-xl">
+          {/* BOOK APPOINTMENT */}
+          <a
+            href="/contact"
+            aria-label="Book an appointment"
+            className="flex min-h-[68px] flex-col items-center justify-center gap-1.5 bg-slate-950 text-white rounded-2xl shadow-lg active:scale-[0.97] transition-transform duration-150"
+          >
+            <Calendar size={21} strokeWidth={2.2} />
 
-            <Calendar size={22} />
-
-            <span className="text-sm font-semibold">
+            <span className="text-xs font-semibold">
               Book
             </span>
-          </button>
+          </a>
 
         </div>
       </div>

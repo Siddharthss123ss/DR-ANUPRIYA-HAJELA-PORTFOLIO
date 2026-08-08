@@ -511,7 +511,7 @@ export default function VideoSlider() {
             <div className="hidden sm:block w-px h-6 sm:h-8 bg-gray-200" />
             <div className="flex items-center gap-1.5 sm:gap-2">
               <Shield size={16} className="sm:w-5 sm:h-5 text-teal-600" />
-              <span className="text-xs sm:text-sm font-semibold text-gray-900">98% Success</span>
+              <span className="text-xs sm:text-sm font-semibold text-gray-900">90% Success</span>
             </div>
             <div className="hidden sm:block w-px h-6 sm:h-8 bg-gray-200" />
             <div className="flex items-center gap-1.5 sm:gap-2">

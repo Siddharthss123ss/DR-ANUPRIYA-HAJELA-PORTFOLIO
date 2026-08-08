@@ -47,8 +47,8 @@ const expertise = [
 ];
 
 const stats = [
-  { value: "12+", label: "Years Experience", icon: Clock },
-  { value: "20K+", label: "Happy Patients", icon: Users },
+  { value: "10+", label: "Years Experience", icon: Clock },
+  { value: "10k+", label: "Happy Patients", icon: Users },
   { value: "500+", label: "Surgeries", icon: ShieldCheck },
   { value: "Gold", label: "Medalist", icon: Award },
 ];
@@ -131,7 +131,7 @@ export default function About() {
                   <div className="absolute inset-0 rounded-xl bg-amber-400/30 blur-md" />
                   <div className="relative bg-white rounded-xl px-3 py-2 sm:px-5 sm:py-3 shadow-xl border border-amber-100/50 backdrop-blur-sm">
                     <div className="text-center">
-                      <p className="text-lg sm:text-2xl font-black text-amber-600">15+</p>
+                      <p className="text-lg sm:text-2xl font-black text-amber-600">10+</p>
                       <p className="text-[8px] sm:text-[10px] font-semibold text-gray-500 uppercase tracking-wider">
                         Years Excellence
                       </p>
