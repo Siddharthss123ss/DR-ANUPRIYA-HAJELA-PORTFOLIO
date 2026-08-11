@@ -44,7 +44,7 @@ const doctorVideos = [
   },
   {
     id: 3,
-    title: "Operation",
+    title: "Endoscopic ear surgery",
     desc: "State-of-the-art ENT surgical procedure",
     icon: Stethoscope,
     videoUrl: "/videos/doc3.mp4",
@@ -278,7 +278,7 @@ export default function VideoSlider() {
           <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900">
             Watch Our{" "}
             <span className="bg-gradient-to-r from-teal-600 via-cyan-600 to-purple-600 bg-clip-text text-transparent">
-              Advanced Surgeries
+              Advanced Procedures
             </span>
           </h2>
 

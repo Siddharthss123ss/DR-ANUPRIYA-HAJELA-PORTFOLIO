@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 import Image from "next/image"; // ✅ Import Next.js Image component
+import VideoReels from "@/components/VideoReels"; // ✅ ADD THIS
 import {
   Ear,
   Waves,
@@ -655,6 +656,7 @@ const procedureCategories = [
 export default function ServicesPage() {
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedProcedure, setSelectedProcedure] = useState<ProcedureDetail | null>(null);
+  const [showVideoReels, setShowVideoReels] = useState(false); // ✅ ADD THIS
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -788,16 +790,19 @@ export default function ServicesPage() {
                 <Calendar size={20} />
                 Book Consultation
               </a>
-              <button className="inline-flex items-center gap-3 px-8 py-4 bg-white text-gray-700 font-bold rounded-full border border-gray-200 hover:border-teal-300 hover:shadow-xl transition-all duration-300">
-                <PlayCircle size={20} className="text-teal-600" />
-                Watch Video
-              </button>
+             <button 
+  onClick={() => setShowVideoReels(true)}  // ✅ CHANGE THIS
+  className="inline-flex items-center gap-3 px-8 py-4 bg-white text-gray-700 font-bold rounded-full border border-gray-200 hover:border-teal-300 hover:shadow-xl transition-all duration-300"
+>
+  <PlayCircle size={20} className="text-teal-600" />
+  Watch Video
+</button>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 max-w-3xl mx-auto">
               {[
-                { icon: Award, label: "Experience", value: "20+ Years" },
-                { icon: Users, label: "Happy Patients", value: "50,000+" },
+                { icon: Award, label: "Experience", value: "10+ Years" },
+                { icon: Users, label: "Happy Patients", value: "10,000+" },
                 { icon: Star, label: "Success Rate", value: "90%" },
                 { icon: Heart, label: "Satisfaction", value: "4.9/5" },
               ].map((stat, idx) => (
@@ -1326,6 +1331,38 @@ export default function ServicesPage() {
           </motion.div>
         )}
       </AnimatePresence>
+      {/* ✅ VIDEO REELS MODAL - ADD THIS */}
+<AnimatePresence>
+  {showVideoReels && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto"
+      onClick={() => setShowVideoReels(false)}
+    >
+      <motion.div
+        initial={{ scale: 0.9, y: 40, opacity: 0 }}
+        animate={{ scale: 1, y: 0, opacity: 1 }}
+        exit={{ scale: 0.9, y: 40, opacity: 0 }}
+        transition={{ type: "spring", damping: 25 }}
+        className="relative max-w-5xl w-full bg-white rounded-[40px] shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={() => setShowVideoReels(false)}
+          className="absolute top-4 right-4 z-50 w-12 h-12 rounded-full bg-white/90 backdrop-blur border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition-all duration-300 shadow-lg"
+        >
+          <X size={22} />
+        </button>
+        
+        <div className="p-6 lg:p-8">
+          <VideoReels />
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
 
     </main>
   );
